@@ -1,6 +1,7 @@
 package pt.org.msglifeiberia.mortality.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import pt.org.msglifeiberia.mortality.models.*;
 import pt.org.msglifeiberia.mortality.repository.MortalityRepository;
@@ -17,14 +18,15 @@ public class MortalityService {
     @Autowired
     private WorldBankService worldBankService;
 
-    public List<Mortality> getMortalityRecords(List<String> countries, List<Integer> years) {
+    public List<Mortality> getMortalityRecords(String country, Integer year) {
         // Se nenhum filtro for fornecido, retorna todos os registros
-        if ((countries == null || countries.isEmpty()) && (years == null || years.isEmpty())) {
+        if ((country == null || country.isBlank()) && (year == null || year == 0)) {
             return repository.findAll();
         }
 
+
         // Caso uma ou ambas as listas sejam fornecidas
-        return repository.findByCountryAndYear(countries, years);
+        return repository.findByCountryAndYear(country, year);
     }
 
     public Mortality createOrUpdateMortality(MortalityDTO rec) {

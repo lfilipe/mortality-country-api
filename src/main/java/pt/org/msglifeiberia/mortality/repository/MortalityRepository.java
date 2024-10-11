@@ -11,10 +11,10 @@ import java.util.List;
 public interface MortalityRepository extends JpaRepository<Mortality, MortalityId> {
 
     @Query("SELECT m FROM Mortality m WHERE "
-            + "(:countries IS NULL OR m.country IN :countries) AND "
-            + "(:years IS NULL OR m.year IN :years)")
+            + "(:country IS NULL OR m.country LIKE :country) AND "
+            + "(:year IS NULL OR m.year = :year)")
     List<Mortality> findByCountryAndYear(
-            @Param("countries") List<String> countries,
-            @Param("years") List<Integer> years
+            @Param("country") String country,
+            @Param("year") Integer year
     );
 }

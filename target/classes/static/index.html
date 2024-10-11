@@ -71,17 +71,38 @@
         </div>
     </div>
 
-    <button id="addRowBtn" class="btn btn-primary mb-3">Add New Row</button>
+    <form class="row g-3">
+        <div class="col-2">
+            <label for="inputCountry" class="visually-hidden">Country</label>
+            <select id="inputCountry" name="inputCountry" class="form-control">
+            </select>
+        </div>
+        <div class="col-2">
+            <label for="inputYear" class="visually-hidden">Year</label>
+            <select id="inputYear" name="inputYear" class="form-control">
+            </select>
+        </div>
+        <div class="col-3">
+            <button type="button" id="searchCountryYear" class="btn btn-secondary mb-3">Search</button>
+        </div>
+        <div class="col-2">
+        </div>
+        <div class="col-3">
+            <button id="addRowBtn" class="btn btn-primary mb-3">Add New Row</button>
+        </div>
+    </form>
+
+
     <table class="table table-bordered">
         <thead>
         <tr>
-            <th>País</th>
-            <th>Ano</th>
-            <th>Homens</th>
-            <th>Mulheres</th>
-            <th>Tx Men</th>
-            <th>Tx Women</th>
-            <th>Ações</th>
+            <th>Country</th>
+            <th>Year</th>
+            <th>Men</th>
+            <th>Women</th>
+            <th>Men Rate</th>
+            <th>Women Rate</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -92,6 +113,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 <script type="text/javascript">
+
+
     document.addEventListener('DOMContentLoaded', () => {
         const tableBody = document.getElementById('tableBody');
         const addRowBtn = document.getElementById('addRowBtn');
@@ -99,14 +122,47 @@
         let originalRowData = {};
         let editingRow = null;
 
-
-        fetch('http://localhost:8082/mortality/countries')
+        fetch(window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality/countries')
             .then(response => response.json())
             .then(data => {
                 countries = data.map(country => ({
                     code: country.iso2Code,
                     name: country.name
                 }));
+
+                const countrySelect = document.getElementById('inputCountry');
+                countrySelect.innerHTML = '';
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = 'Select a country'; // Mensagem padrão
+                countrySelect.appendChild(defaultOption);
+
+                countries.forEach(country => {
+                    const option = document.createElement('option');
+                    option.value = country.code;
+                    option.textContent = country.name;
+                    countrySelect.appendChild(option);
+                });
+
+
+                const yearSelect = document.getElementById('inputYear');
+
+
+                yearSelect.innerHTML = '';
+
+                const defaultYearOption = document.createElement('option');
+                defaultYearOption.value = '';
+                defaultYearOption.textContent = 'Select a year'; // Mensagem padrão
+                yearSelect.appendChild(defaultYearOption);
+
+                for (let year = 1960; year <= 2023; year++) {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                }
+
+
 
                 fetchMortalityData();
                 document.querySelectorAll('.loading-state').forEach(function(el) {
@@ -116,8 +172,23 @@
             .catch(error => console.error('Error fetching countries:', error));
 
 
-        function fetchMortalityData() {
-            fetch('http://localhost:8082/mortality')
+
+        function fetchMortalityData(country = '', year = '') {
+
+            const baseUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality';
+            const params = new URLSearchParams();
+
+            if (country) {
+                params.append('country', country);
+            }
+            if (year) {
+                params.append('year', year);
+            }
+
+            // Construct the full URL
+            const url = `${baseUrl}?${params.toString()}`;
+
+            fetch(url)
                 .then(response => response.json())
                 .then(data => {
                     data.forEach(item => {
@@ -127,23 +198,37 @@
                 .catch(error => console.error('Error fetching mortality data:', error));
         }
 
+        document.getElementById('searchCountryYear').addEventListener('click', () => {
+
+            const country = document.getElementById('inputCountry').value;
+            const year = document.getElementById('inputYear').value;
+            document.querySelectorAll('.loading-state').forEach(function(el) {
+                el.style.display = 'flex';
+            });
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            fetchMortalityData(country, year);
+            document.querySelectorAll('.loading-state').forEach(function(el) {
+                el.style.display = 'none';
+            });
+        });
+
         // Add New Row button event
         addRowBtn.addEventListener('click', () => {
             if (editingRow !== null) {
                 alert("Já existe uma linha sendo editada. Salve ou cancele antes de adicionar uma nova.");
                 return;
             }
-
             const newRow = document.createElement('tr');
             newRow.innerHTML = `<td>${generateCountrySelect()}</td>
                                   <td><input type="number" class="form-control" placeholder="Ano" required></td>
-                                  <td><input type="number" class="form-control" placeholder="Homens" required></td>
-                                  <td><input type="number" class="form-control" placeholder="Mulheres" required></td>
-                                  <td><input type="number" class="form-control" placeholder="Tx Men" disabled="disabled"></td>
-                                  <td><input type="number" class="form-control" placeholder="Tx Women" disabled="disabled"></td>
+                                  <td><input type="number" class="form-control" placeholder="Men" required></td>
+                                  <td><input type="number" class="form-control" placeholder="Women" required></td>
+                                  <td><input type="number" class="form-control" placeholder="Men Rate" disabled="disabled"></td>
+                                  <td><input type="number" class="form-control" placeholder="Women Rate" disabled="disabled"></td>
                                   <td>
-                                    <button class="btn btn-sm btn-success saveBtn">Salvar</button>
-                                    <button class="btn btn-sm btn-danger cancelBtn">Cancelar</button>
+                                    <button class="btn btn-sm btn-success saveBtn">Save</button>
+                                    <button class="btn btn-sm btn-danger cancelBtn">Cancel</button>
                                   </td>
                                 `;
             tableBody.appendChild(newRow);
@@ -180,8 +265,8 @@
                                   <td>${item.menDeathsPerThousand}</td>
                                   <td>${item.womenDeathsPerThousand}</td>
                                   <td>
-                                    <button class="btn btn-sm btn-warning editBtn">Editar</button>
-                                    <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                                    <button class="btn btn-sm btn-warning editBtn">Edit</button>
+                                    <button class="btn btn-sm btn-danger deleteBtn">Delete</button>
                                   </td>`;
             tableBody.appendChild(newRow);
 
@@ -254,8 +339,8 @@
                                              <td>${data.menDeathsPerThousand}</td>
                                              <td>${data.womenDeathsPerThousand}</td>
                                              <td>
-                                               <button class="btn btn-sm btn-warning editBtn">Editar</button>
-                                               <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                                               <button class="btn btn-sm btn-warning editBtn">Edit</button>
+                                               <button class="btn btn-sm btn-danger deleteBtn">Delete</button>
                                              </td>`;
 
                                                 row.querySelector('.editBtn').addEventListener('click', () => editRow(row));
@@ -312,8 +397,8 @@
               <td><input type="number" class="form-control" value="${menDeathsPerThousand}" disabled="disabled"></td>
               <td><input type="number" class="form-control" value="${womenDeathsPerThousand}" disabled="disabled"></td>
               <td>
-                <button class="btn btn-sm btn-success saveBtn">Salvar</button>
-                <button class="btn btn-sm btn-danger cancelBtn">Cancelar</button>
+                <button class="btn btn-sm btn-success saveBtn">Save</button>
+                <button class="btn btn-sm btn-danger cancelBtn">Cancel</button>
               </td>
             `;
 
@@ -338,8 +423,8 @@
                   <td>${originalRowData.menDeathsPerThousand}</td>
                   <td>${originalRowData.womenDeathsPerThousand}</td>
                   <td>
-                    <button class="btn btn-sm btn-warning editBtn">Editar</button>
-                    <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                    <button class="btn btn-sm btn-warning editBtn">Edit</button>
+                    <button class="btn btn-sm btn-danger deleteBtn">Delete</button>
                   </td>
                 `;
 
@@ -360,7 +445,7 @@
             const countryCell = cells[0].querySelector('select');
             const selectedCountryCode = countryCell ? countryCell.value : '';
 
-            const confirmed = window.confirm("Tem certeza de que deseja excluir o registo "+selectedCountryCode+" de "+cells[1].innerText+"?");
+            const confirmed = window.confirm("Are you sure about delete country "+selectedCountryCode+" of "+cells[1].innerText+"?");
 
             if (confirmed) {
                 document.querySelectorAll('.loading-state').forEach(function(el) {
@@ -371,7 +456,7 @@
                 })
                 .then(response => {
                     if (response.ok) {
-                        // If the response is successful (status code 200-299)
+
                         return response.json(); // Parse JSON if needed
                     } else {
                         throw new Error(`Error: ${response.status}`); // Handle errors
@@ -417,6 +502,8 @@
                 }
             });
         }
+
+
 
 
     });

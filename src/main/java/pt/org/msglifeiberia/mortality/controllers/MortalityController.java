@@ -35,9 +35,9 @@ public class MortalityController {
     }
 
     @GetMapping()
-    public List<Mortality> getMortalityRecords(@RequestParam(required = false) List<String> countries,
-                                               @RequestParam(required = false) List<Integer> years) {
-        return mortalityService.getMortalityRecords(countries, years);
+    public List<Mortality> getMortalityRecords(@RequestParam(required = false) String country,
+                                               @RequestParam(required = false) Integer year) {
+        return mortalityService.getMortalityRecords(country, year);
     }
 
     @DeleteMapping()
