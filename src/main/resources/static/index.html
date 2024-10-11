@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mortality Table Records</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+        .loading-state {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .loading {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 10px solid #ddd;
+            border-top-color: orange;
+            animation: loading 1s linear infinite;
+        }
+        @keyframes loading {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        #alertWindow .modal-header { height: 52px; min-height: 52px; border: 0px; }
+        #alertWindow .modal-body { padding: 0 40px; }
+        #alertWindow .modal-body  p {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.56;
+            letter-spacing: normal;
+        }
+        #alertWindow .modal-footer { border: 0px; }
+    </style>
+</head>
+<body>
+<div class="loading-state">
+    <div class="loading"></div>
+</div>
+<div class="container mt-5">
+    <h2>Records mortality by Country and Year</h2>
+
+    <div class="modal" tabindex="-1" data-bs-backdrop="static" id="alertWindow">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="alert-message"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="addRowBtn" class="btn btn-primary mb-3">Add New Row</button>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>País</th>
+            <th>Ano</th>
+            <th>Homens</th>
+            <th>Mulheres</th>
+            <th>Tx Men</th>
+            <th>Tx Women</th>
+            <th>Ações</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+    </table>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript">
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('tableBody');
+        const addRowBtn = document.getElementById('addRowBtn');
+        let countries = [];
+        let originalRowData = {};
+        let editingRow = null;
+
+
+        fetch('http://localhost:8082/mortality/countries')
+            .then(response => response.json())
+            .then(data => {
+                countries = data.map(country => ({
+                    code: country.iso2Code,
+                    name: country.name
+                }));
+
+                fetchMortalityData();
+                document.querySelectorAll('.loading-state').forEach(function(el) {
+                    el.style.display = 'none';
+                });
+            })
+            .catch(error => console.error('Error fetching countries:', error));
+
+
+        function fetchMortalityData() {
+            fetch('http://localhost:8082/mortality')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(item => {
+                        addRowToTable(item);
+                    });
+                })
+                .catch(error => console.error('Error fetching mortality data:', error));
+        }
+
+        // Add New Row button event
+        addRowBtn.addEventListener('click', () => {
+            if (editingRow !== null) {
+                alert("Já existe uma linha sendo editada. Salve ou cancele antes de adicionar uma nova.");
+                return;
+            }
+
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `<td>${generateCountrySelect()}</td>
+                                  <td><input type="number" class="form-control" placeholder="Ano" required></td>
+                                  <td><input type="number" class="form-control" placeholder="Homens" required></td>
+                                  <td><input type="number" class="form-control" placeholder="Mulheres" required></td>
+                                  <td><input type="number" class="form-control" placeholder="Tx Men" disabled="disabled"></td>
+                                  <td><input type="number" class="form-control" placeholder="Tx Women" disabled="disabled"></td>
+                                  <td>
+                                    <button class="btn btn-sm btn-success saveBtn">Salvar</button>
+                                    <button class="btn btn-sm btn-danger cancelBtn">Cancelar</button>
+                                  </td>
+                                `;
+            tableBody.appendChild(newRow);
+
+            const saveBtn = newRow.querySelector('.saveBtn');
+            const cancelBtn = newRow.querySelector('.cancelBtn');
+
+            saveBtn.addEventListener('click', () => saveRow(newRow));
+            cancelBtn.addEventListener('click', () => cancelEdit(newRow));
+
+            hideOtherActions();
+            editingRow = newRow;
+        });
+
+        // Function to generate the select options dynamically
+        function generateCountrySelect(selectedCode = '', edit=true) {
+            let selectHTML;
+
+            selectHTML = `<select ${edit === false ? 'disabled' : ''} class="form-control">`;
+            countries.forEach(country => {
+                selectHTML += `<option value="${country.code}" ${country.code === selectedCode ? 'selected' : ''}>${country.name}</option>`;
+            });
+            selectHTML += `</select>`;
+            return selectHTML;
+        }
+
+        // Function to add a row to the table
+        function addRowToTable(item) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `<td>${generateCountrySelect(item.country, false)}</td>
+                                  <td>${item.year}</td>
+                                  <td>${item.men}</td>
+                                  <td>${item.women}</td>
+                                  <td>${item.menDeathsPerThousand}</td>
+                                  <td>${item.womenDeathsPerThousand}</td>
+                                  <td>
+                                    <button class="btn btn-sm btn-warning editBtn">Editar</button>
+                                    <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                                  </td>`;
+            tableBody.appendChild(newRow);
+
+            newRow.querySelector('.editBtn').addEventListener('click', () => editRow(newRow));
+            newRow.querySelector('.deleteBtn').addEventListener('click', () => deleteRow(newRow));
+        }
+
+        // Save a new or edited row
+        function saveRow(row) {
+            const inputs = row.querySelectorAll('input, select');
+            const country = inputs[0].value;
+            const year = inputs[1].value;
+            const men = inputs[2].value;
+            const women = inputs[3].value;
+            const menDeathsPerThousand = inputs[4].value;
+            const womenDeathsPerThousand = inputs[5].value;
+
+            if (!country || !year || !men || !women) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            document.querySelectorAll('.loading-state').forEach(function(el) {
+                el.style.display = 'flex';
+            });
+            fetch(window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // sending JSON data
+                },
+                body: JSON.stringify({
+                        'country'   : country,
+                        'year'      : year,
+                        'men'       : men,
+                        'women'     : women
+                    }) // convert data object to JSON string
+                })
+                .then(response => {
+                    document.querySelectorAll('.loading-state').forEach(function(el) {
+                        el.style.display = 'none';
+                    });
+                    if (response.status === 400) {
+
+                        return response.json().then(data => {
+                            const errorList = data.errors; // This is the array of errors
+
+                            let textContent = '';
+
+                            errorList.forEach(error => {
+                                textContent += '<li>'+error+'</li>';
+                            });
+                            alert(textContent);
+                        }).catch(() => {
+                            console.error('Invalid JSON response for 400 error');
+                        });
+
+
+                    }
+                    if (response.status === 404) {
+                        alert('No rec was found (404)');
+                    } else if (response.status === 500) {
+                        alert('Internal server error (500)');
+                    } else if (response.ok) {
+                        // If the response is successful (status code 200-299)
+                        return response.json().then(data => {
+                            row.innerHTML = `<td>${generateCountrySelect(data.country, false)}</td>
+                                             <td>${data.year}</td>
+                                             <td>${data.men}</td>
+                                             <td>${data.women}</td>
+                                             <td>${data.menDeathsPerThousand}</td>
+                                             <td>${data.womenDeathsPerThousand}</td>
+                                             <td>
+                                               <button class="btn btn-sm btn-warning editBtn">Editar</button>
+                                               <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                                             </td>`;
+
+                                                row.querySelector('.editBtn').addEventListener('click', () => editRow(row));
+                                                row.querySelector('.deleteBtn').addEventListener('click', () => deleteRow(row));
+                                                showOtherActions();
+                                                editingRow = null;
+
+                                                document.querySelectorAll('.loading-state').forEach(function(el) {
+                                                    el.style.display = 'none';
+                                                });
+                        }).catch(() => {
+                            console.error('Invalid JSON response for ok');
+                        });
+
+
+                        // Parse the JSON data
+                    } else {
+                        alert(`Unexpected error: ${response.status}`);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+
+        }
+
+        // Edit an existing row
+        function editRow(row) {
+            const cells = row.querySelectorAll('td');
+
+            const countryCell = cells[0].querySelector('select');
+            const selectedCountryCode = countryCell ? countryCell.value : '';  // Pega o 'value' do select
+
+            // Store original data
+            originalRowData = {
+                countryCode: selectedCountryCode,
+                countryText: cells[0].innerText,
+                year: cells[1].innerText,
+                men: cells[2].innerText,
+                women: cells[3].innerText,
+                menDeathsPerThousand: cells[4].innerText,
+                womenDeathsPerThousand: cells[5].innerText
+            };
+
+            const year = cells[1].innerText;
+            const men = cells[2].innerText;
+            const women = cells[3].innerText;
+            const menDeathsPerThousand = cells[4].innerText;
+            const womenDeathsPerThousand = cells[5].innerText;
+
+            row.innerHTML = `
+              <td>${generateCountrySelect(selectedCountryCode, true)}</td>
+              <td><input type="number" class="form-control" value="${year}" required></td>
+              <td><input type="number" class="form-control" value="${men}" required></td>
+              <td><input type="number" class="form-control" value="${women}" required></td>
+              <td><input type="number" class="form-control" value="${menDeathsPerThousand}" disabled="disabled"></td>
+              <td><input type="number" class="form-control" value="${womenDeathsPerThousand}" disabled="disabled"></td>
+              <td>
+                <button class="btn btn-sm btn-success saveBtn">Salvar</button>
+                <button class="btn btn-sm btn-danger cancelBtn">Cancelar</button>
+              </td>
+            `;
+
+            row.querySelector('.saveBtn').addEventListener('click', () => saveRow(row));
+            row.querySelector('.cancelBtn').addEventListener('click', () => cancelEdit(row));
+
+            hideOtherActions();
+            editingRow = row;
+        }
+
+        // Cancel row addition or editing
+        function cancelEdit(row) {
+
+            if(!originalRowData.year || originalRowData.year=== undefined){
+                row.remove();
+            }else{
+                row.innerHTML = `
+                  <td>${generateCountrySelect(originalRowData.countryCode, false)}</td>
+                  <td>${originalRowData.year}</td>
+                  <td>${originalRowData.men}</td>
+                  <td>${originalRowData.women}</td>
+                  <td>${originalRowData.menDeathsPerThousand}</td>
+                  <td>${originalRowData.womenDeathsPerThousand}</td>
+                  <td>
+                    <button class="btn btn-sm btn-warning editBtn">Editar</button>
+                    <button class="btn btn-sm btn-danger deleteBtn">Apagar</button>
+                  </td>
+                `;
+
+                originalRowData = {};
+                row.querySelector('.editBtn').addEventListener('click', () => editRow(row));
+                row.querySelector('.deleteBtn').addEventListener('click', () => deleteRow(row));
+            }
+
+
+            showOtherActions();
+            editingRow = null;
+        }
+
+        function deleteRow(row) {
+
+            const cells = row.querySelectorAll('td');
+
+            const countryCell = cells[0].querySelector('select');
+            const selectedCountryCode = countryCell ? countryCell.value : '';
+
+            const confirmed = window.confirm("Tem certeza de que deseja excluir o registo "+selectedCountryCode+" de "+cells[1].innerText+"?");
+
+            if (confirmed) {
+                document.querySelectorAll('.loading-state').forEach(function(el) {
+                    el.style.display = 'flex';
+                });
+                fetch(window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality?country='+selectedCountryCode+'&year='+cells[1].innerText, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        
+                        return response.json(); // Parse JSON if needed
+                    } else {
+                        throw new Error(`Error: ${response.status}`); // Handle errors
+                    }
+                })
+                .then(data => {
+                    row.remove();
+                    console.log('Deleted successfully:', data); // Handle the response data
+                    document.querySelectorAll('.loading-state').forEach(function(el) {
+                        el.style.display = 'none';
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error); // Handle errors
+                });
+
+
+            }
+        }
+
+        function hideOtherActions() {
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                if (row !== editingRow) {
+                    const editBtn = row.querySelector('.editBtn');
+                    const deleteBtn = row.querySelector('.deleteBtn');
+                    if (editBtn && deleteBtn) {
+                        editBtn.classList.add('hidden');
+                        deleteBtn.classList.add('hidden');
+                    }
+                }
+            });
+        }
+
+        function showOtherActions() {
+            const rows = document.querySelectorAll('#tableBody tr');
+            rows.forEach(row => {
+                const editBtn = row.querySelector('.editBtn');
+                const deleteBtn = row.querySelector('.deleteBtn');
+                if (editBtn && deleteBtn) {
+                    editBtn.classList.remove('hidden');
+                    deleteBtn.classList.remove('hidden');
+                }
+            });
+        }
+
+
+    });
+
+    // Overriding alert function
+    function customAlert(msg) {
+        var m = document.getElementById('alert-message');
+        //m.textContent = String(msg);
+        m.innerHTML = msg;
+
+        var me = document.getElementById('alertWindow');
+        var alertModal = new bootstrap.Modal(me, {
+            keyboard: false,
+            backdrop: 'static'
+        });
+        console.log(alertWindow);
+        alertModal.show();
+    }
+
+    (function(proxied) {
+        window.alert = function() {
+            return proxied.apply(this, arguments);
+        };
+    })(customAlert);
+
+
+
+</script>
+</body>
+</html>

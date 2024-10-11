@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Mortality Table Records</title>
+    <!-- Favicon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    />
+    <!-- PRISM -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/css/new-prism.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/css/mdb.min.css" />
+    <!-- Plugin css file -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/css/table-editor.min.css" />
+    <!-- Custom styles -->
+    <style></style>
+</head>
+
+<body data-spy="scroll" data-target="#scrollspy" data-offset="0">
+<!-- Start your project here-->
+<div class="container my-5">
+
+
+    <!-- Panels -->
+    <div class="tab-content mt-4" id="pills-tabContent">
+
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-md-10 mb-4">
+                    <!--Section: Docs content-->
+                    <section>
+                        <!--Section: Introduction-->
+                        <section id="section-introduction">
+                            <!-- Main title -->
+                            <h2 class="h1 font-weight-bold">Mortality</h2>
+
+                        </section>
+
+                        <!--Section: Async data example-->
+                        <section id="section-async-data">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Todos os registos</h2>
+
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <button id="async_data_btn" class="btn btn-primary btn-sm">
+                                        Load data
+                                    </button>
+                                    <div class="d-flex">
+                                        <div class="form-outline">
+                                            <input
+                                                    type="text"
+                                                    data-search
+                                                    data-target="#table_async_data"
+                                                    id="search_async"
+                                                    class="form-control"
+                                            />
+                                            <label class="form-label" for="search_async">Search</label>
+                                        </div>
+                                        <button
+                                                class="btn btn-primary btn-sm ml-3"
+                                                data-add-entry
+                                                data-target="#table_async_data"
+                                        >
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div id="table_async_data"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                        </section>
+                        <!--Section: Async data example-->
+
+
+                    </section>
+                    <!--Section: Docs content-->
+                </div>
+                <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+        </div>
+        <!-- Overview panel -->
+
+    </div>
+    <!-- Panels -->
+</div>
+<!-- End your project here-->
+</body>
+<!-- PRISM -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/js/new-prism.js"></script>
+<!-- MDB SNIPPET -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/js/mdbsnippet.min.js"></script>
+<!-- MDB -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/js/mdb.min.js"></script>
+<!-- Plugin js file -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/js/tableEditor.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript">
+
+    // async data
+
+    (function () {
+
+        const paises = ['PT', 'ES', 'MT'];
+        //const paises = [{value: 'PT', label: "PTL"}, {value: 'ES', label: "ESP"}];
+
+        const table = document.getElementById('table_async_data');
+        const loadBtn = document.getElementById('async_data_btn');
+        const columns = [
+            { label: 'Country', field: 'country', options: paises, inputType: 'select'},
+            { label: 'Year', field: 'year', inputType: 'number' },
+            { label: 'Men', field: 'men'},
+            { label: 'Women', field: 'women', inputType: 'number' },
+            { label: 'Tx Men', field: 'menDeathsPerThousand', inputType: 'number', editable: false},
+            { label: 'Tx Women', field: 'womenDeathsPerThousand', inputType: 'number', editable: false},
+        ];
+
+        let previousRows = [];
+
+        const asyncTable = new TableEditor(
+            table,
+            {
+                columns,
+            },
+            {
+                loading: true,
+                confirm: true
+            }
+        );
+
+
+
+
+
+        table.addEventListener('update.mdb.tableEditor', (e) => {
+
+            const updatedRows = e.rows;  // Get updated rows from the event
+            let editedIndex = -1;
+
+            // Find the index of the edited row by comparing updatedRows with previousRows
+            updatedRows.forEach((row, index) => {
+                const prevRow = previousRows[index];
+                if (JSON.stringify(row) !== JSON.stringify(prevRow)) {
+                    editedIndex = index;
+                }
+            });
+
+            console.log(`Row edited at index: ${editedIndex}`);
+            console.log('Updated row:', updatedRows[editedIndex]);
+
+            // After editing, remove the 'Phone' column
+            //columns = columns.filter(col => col.field !== 'phone');
+            //asyncTable.update({ columns });
+
+            // Update previousRows with the new values
+            previousRows = [...updatedRows];
+
+/*
+            //const mortalityRecord = JSON.parse(e.rows);
+            const jsonString = JSON.stringify(e.rows);
+            console.log(jsonString);
+
+            console.log(e.rows);*/
+
+            // After editing, hide the "Men" column again
+
+            //showIndicatorsColumns();
+        });
+
+        // Function to hide the "Men" and "Women" column
+        const hideMenWomenColumnsOriginal = () => {
+
+            const thElements = document.querySelectorAll('table > thead > tr > th');
+            if (thElements[2]) {
+                thElements[2].style.display = 'none';
+            }
+            if (thElements[3]) {
+                thElements[3].style.display = 'none';
+            }
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row) => {
+                const menCell = row.querySelector('td[data-field="men"]');
+                if (menCell) {
+                    menCell.style.display = 'none';
+                }
+
+                const womenCell = row.querySelector('td[data-field="women"]');
+                if (womenCell) {
+                    womenCell.style.display = 'none';
+                }
+
+            });
+        };
+
+        const showMenWomenColumns = () => {
+
+            const thElements = document.querySelectorAll('table > thead > tr > th');
+            if (thElements[2]) {
+                thElements[2].style.display = '';
+            }
+            if (thElements[3]) {
+                thElements[3].style.display = '';
+            }
+
+            const rows = table.querySelectorAll('tbody tr');
+            rows.forEach((row) => {
+                const menCell = row.querySelector('td[data-field="men"]');
+                if (menCell) {
+                    menCell.style.display = '';
+                }
+
+                const womenCell = row.querySelector('td[data-field="women"]');
+                if (womenCell) {
+                    womenCell.style.display = '';
+                }
+            });
+        };
+
+        const hideIndicatorsColumns = () => {
+
+            const thElements = document.querySelectorAll('table > thead > tr > th');
+            if (thElements[4]) {
+                thElements[4].style.display = 'none';
+            }
+            if (thElements[5]) {
+                thElements[5].style.display = 'none';
+            }
+
+
+        };
+
+        const showIndicatorsColumns = () => {
+
+            const thElements = document.querySelectorAll('table > thead > tr > th');
+            if (thElements[4]) {
+                thElements[4].style.display = '';
+            }
+            if (thElements[5]) {
+                thElements[5].style.display = '';
+            }
+        };
+
+        table.addEventListener('edit.mdb.tableEditor', () => {
+            renderSelect();
+            console.log('edit.mdb.tableEditor.clickeiiiii');
+
+            //showMenWomenColumns();  // Show the "Men" column when edit is clicked
+           // hideIndicatorsColumns();
+        });
+
+        table.addEventListener('exit.mdb.tableEditor', () => {
+            console.log('exit.mdb.tableEditor.clickeiiiii');
+            //hideMenWomenColumns();  // Show the "Men" column when edit is clicked
+            //showIndicatorsColumns();
+        });
+
+
+/*
+        loadBtn.addEventListener('click', () => {
+
+            setTimeout(() => {
+                //hideMenWomenColumns();  // Hide "Men" column after data is loaded
+                //showIndicatorsColumns();
+            }, 2200);  // Give enough time after data is loaded
+        });*/
+
+        const loadData = () => {
+            asyncTable.update(null, { loading: true });
+
+            fetch('http://localhost:8082/mortality')
+                .then((response) => response.json())
+                .then((data) => {
+                    setTimeout(() => {
+                        const rows = data.map((rec) => ({
+                            ...rec,
+                        }));
+
+                        previousRows = [...rows];  // Store the initial data for comparison later
+
+                        asyncTable.update(
+                            {
+                                rows: rows,
+                            },
+                            { loading: false }
+                        );
+                    }, 2000);
+                   // hideMenWomenColumns();
+                    renderSelect();
+                });
+
+        };
+
+        //loadBtn.addEventListener('click', loadData);
+
+
+        loadBtn.addEventListener('click', () => {
+            loadData();
+        });
+
+        loadData();
+
+        //hideMenWomenColumns();
+
+    })();
+
+</script>
+</html>

@@ -1,0 +1,2757 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>MDB Table Editor</title>
+    <!-- Favicon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css" />
+    <!-- Google Fonts Roboto -->
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+    />
+    <!-- PRISM -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/css/new-prism.css" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/css/mdb.min.css" />
+    <!-- Plugin css file -->
+    <link rel="stylesheet" href="https://mdbgo.io/m-dembna/mdb5-table-editor/css/table-editor.min.css" />
+    <!-- Custom styles -->
+    <style></style>
+</head>
+
+<body data-spy="scroll" data-target="#scrollspy" data-offset="0">
+<!-- Start your project here-->
+<div class="container my-5">
+    <!-- Navs -->
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <!-- Overview tab -->
+        <li class="nav-item" role="presentation">
+            <a
+                    class="nav-link active"
+                    id="pills-overview-tab"
+                    data-toggle="pill"
+                    href="#pills-overview"
+                    role="tab"
+                    aria-controls="pills-overview"
+                    aria-selected="true"
+            >Overview</a
+            >
+        </li>
+        <!-- Overview tab -->
+
+        <!-- Api tab -->
+        <li class="nav-item" role="presentation">
+            <a
+                    class="nav-link"
+                    id="pills-api-tab"
+                    data-toggle="pill"
+                    href="#pills-api"
+                    role="tab"
+                    aria-controls="pills-api"
+                    aria-selected="false"
+            >API</a
+            >
+        </li>
+        <!-- Api tab -->
+    </ul>
+    <!-- Navs -->
+
+    <!-- Panels -->
+    <div class="tab-content mt-4" id="pills-tabContent">
+        <!-- Overview panel -->
+        <div
+                class="tab-pane fade show active"
+                id="pills-overview"
+                role="tabpanel"
+                aria-labelledby="pills-overview-tab"
+        >
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-md-10 mb-4">
+                    <!--Section: Docs content-->
+                    <section>
+                        <!--Section: Introduction-->
+                        <section id="section-introduction">
+                            <!-- Main title -->
+                            <h2 class="h1 font-weight-bold">Table Editor</h2>
+
+                            <!-- Seo title -->
+                            <h1 class="h6">Table Editor - Bootstrap 5 & Material Design 2.0 plugin</h1>
+
+                            <!-- Description -->
+                            <p>
+                                Table Editor is a useful tool for displaying and managing data. The component
+                                works similarly to the Datatable (<a
+                                    href="https://mdbootstrap.com/docs/standard/data/datatables/"
+                            >docs</a
+                            >) with an additional column for action buttons.
+                            </p>
+
+                            <p class="note note-light">
+                                <strong>Note:</strong> Read the <strong>API</strong> tab to find all available
+                                options and advanced customization
+                            </p>
+                        </section>
+                        <!--Section: Introduction-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Basic example-->
+                        <section id="section-basic-example">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Basic example</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                You can initialize the component on <code>table</code> element by adding
+                                <code>table-editor</code> class to its wrapper. In this version, you don't need
+                                any additional JavaScript - set all options as data-attributes (table settings -
+                                wrapper element, column settings - <code>th</code> element).
+                            </p>
+
+                            <p class="note note-primary">
+                                <strong>Note:</strong> search field and add button are not a build-in part of
+                                Table Editor, but you can easily initialize those functionalities in the
+                                simplest form by adding data-attributes to them (data-select, data-add-entry,
+                                and data-target).
+                            </p>
+
+                            <p class="note note-warning">
+                                Table Editor collects information from HTML markup to create a data structure -
+                                the <code>&lt;table&gt;</code> element will be replaced in the DOM with a
+                                different node after component initializes.
+                            </p>
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_1"
+                                                type="text"
+                                                id="search_table_1"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_table_1">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_1"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div
+                                        class="table-editor"
+                                        id="table_1"
+                                        data-entries="5"
+                                        data-entries-options="[5, 10, 15]"
+                                >
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th class="th-sm" data-width="250">Company</th>
+                                            <th class="th-sm" data-width="250" data-sort="false">Address</th>
+                                            <th class="th-sm" data-width="250" data-sort="false">
+                                                Employees
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Smith & Johnson</td>
+                                            <td>Park Lane 2, London</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P.J. Company</td>
+                                            <td>Oak Street 7, Aberdeen</td>
+                                            <td>80</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Food & Wine</td>
+                                            <td>Netherhall Gardens 3, Hampstead</td>
+                                            <td>12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>IT Service</td>
+                                            <td>Warwick Road 14, London</td>
+                                            <td>17</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A. Jonson Gallery</td>
+                                            <td>Oaklands Avenue 2, London</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>F.A. Architects</td>
+                                            <td>Frognal Way 7, Hampstead</td>
+                                            <td>4</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        data-search
+                                                        data-target="#table_1"
+                                                        type="text"
+                                                        id="search_table_1"
+                                                        class="form-control"
+                                                />
+                                                <label class="form-label" for="search_table_1">Search</label>
+                                            </div>
+                                            <button
+                                                    class="btn btn-primary btn-sm ml-3"
+                                                    data-add-entry
+                                                    data-target="#table_1"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div
+                                                class="table-editor"
+                                                id="table_1"
+                                                data-entries="5"
+                                                data-entries-options="[5, 10, 15]"
+                                        >
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th class="th-sm" data-width="250">Company</th>
+                                                    <th class="th-sm" data-width="250" data-sort="false">Address</th>
+                                                    <th class="th-sm" data-width="250" data-sort="false">
+                                                        Employees
+                                                    </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>Smith & Johnson</td>
+                                                    <td>Park Lane 2, London</td>
+                                                    <td>30</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>P.J. Company</td>
+                                                    <td>Oak Street 7, Aberdeen</td>
+                                                    <td>80</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Food & Wine</td>
+                                                    <td>Netherhall Gardens 3, Hampstead</td>
+                                                    <td>12</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IT Service</td>
+                                                    <td>Warwick Road 14, London</td>
+                                                    <td>17</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>A. Jonson Gallery</td>
+                                                    <td>Oaklands Avenue 2, London</td>
+                                                    <td>4</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>F.A. Architects</td>
+                                                    <td>Frognal Way 7, Hampstead</td>
+                                                    <td>4</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Basic example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Modal example-->
+                        <section id="section-modal">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Modal</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                To change the default editing mode (inline) to the modal version, set option
+                                <code>mode</code> to <code>"modal"</code>.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_modal"
+                                                type="text"
+                                                id="search_modal"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_modal">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_modal"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_modal"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        data-search
+                                                        data-target="#table_modal"
+                                                        type="text"
+                                                        id="search_modal"
+                                                        class="form-control"
+                                                />
+                                                <label class="form-label" for="search_modal">Search</label>
+                                            </div>
+                                            <button class="btn btn-primary btn-sm ml-3" data-add-entry data-target="#table_modal">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_modal"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const tableModal = new TableEditor(
+                                        document.getElementById('table_modal'),
+                                        {
+                                        columns: advancedColumns,
+                                        rows: advancedRows,
+                                        },
+                                        { mode: 'modal', entries: 5, entriesOptions: [5, 10, 15] }
+                                        );
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Disable edit example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Inputs example-->
+                        <section id="section-inputs">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Inputs example</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                Table Editor supports several input types - for example, if you wish to force a
+                                user to enter only Boolean values in one column, you can set its
+                                <code>inputType</code> to a checkbox.
+                            </p>
+
+                            <p>Supported input types:</p>
+                            <ul>
+                                <li><strong>Text</strong> (default)</li>
+                                <li><strong>Number</strong></li>
+                                <li>
+                                    <strong>Checkbox</strong> - displays a checkbox in edit mode and true/false
+                                    value otherwise
+                                </li>
+                                <li><strong>Select</strong> - additionally requires an array of options</li>
+                            </ul>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_inputs"
+                                                type="text"
+                                                id="search_table_inputs"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_table_inputs">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_inputs"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_inputs"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input data-search data-target="#table_inputs" type="text" id="search_table_inputs" class="form-control" />
+                                                <label class="form-label" for="search_table_inputs">Search</label>
+                                            </div>
+                                            <button class="btn btn-primary btn-sm ml-3" data-add-entry data-target="#table_inputs">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_inputs"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const tableDisableEdit = new TableEditor(
+                                        document.getElementById('table_inputs'),
+                                        { columns: advancedColumns, rows: advancedRows },
+                                        { entries: 5, entriesOptions: [5, 10, 15] }
+                                        );
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Inputs example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Disable edit example-->
+                        <section id="section-disable-edit">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Disable edit</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                You can disable editing for a column by setting its <code>editable</code> option
+                                to <code>false</code>. A user won't be able to change its value in the edit
+                                mode.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_disable_edit"
+                                                type="text"
+                                                id="search_disable_edit"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_disable_edit">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_disable_edit"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_disable_edit"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        data-search
+                                                        data-target="#table_disable_edit"
+                                                        type="text"
+                                                        id="search_disable_edit"
+                                                        class="form-control"
+                                                />
+                                                <label class="form-label" for="search_disable_edit">Search</label>
+                                            </div>
+                                            <button
+                                                    class="btn btn-primary btn-sm ml-3"
+                                                    data-add-entry
+                                                    data-target="#table_disable_edit"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_disable_edit"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const tableDisableEdit = new TableEditor(
+                                        document.getElementById('table_disable_edit'),
+                                        {
+                                        columns: advancedColumns.map((column) => {
+                                        return {
+                                        ...column,
+                                        editable: false,
+                                        };
+                                        }),
+                                        rows: advancedRows,
+                                        },
+                                        { entries: 5, entriesOptions: [5, 10, 15] }
+                                        );
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Disable edit example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Confirm delete example-->
+                        <section id="section-confirm-delete">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Confirm delete</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                If you want to prevent data from being accidentally removed, you can set a
+                                <code>confirm</code> option to <code>true</code>. In this case, Table Editor
+                                will show a Popconfirm element before removing an entry.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_confirm_delete"
+                                                type="text"
+                                                id="search_confirm_delete"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_confirm_delete">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_confirm_delete"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_confirm_delete"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        data-search
+                                                        data-target="#table_confirm_delete"
+                                                        type="text"
+                                                        id="search_confirm_delete"
+                                                        class="form-control"
+                                                />
+                                                <label class="form-label" for="search_confirm_delete">Search</label>
+                                            </div>
+                                            <button
+                                                    class="btn btn-primary btn-sm ml-3"
+                                                    data-add-entry
+                                                    data-target="#table_confirm_delete"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_confirm_delete"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const tableConfirmDelete = new TableEditor(
+                                        document.getElementById('table_confirm_delete'),
+                                        {
+                                        columns: advancedColumns,
+                                        rows: advancedRows,
+                                        },
+                                        { entries: 5, entriesOptions: [5, 10, 15], confirm: true }
+                                        );
+                                        );
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Confirm delete example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Advanced search example-->
+                        <section id="section-advanced-search">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Advanced search</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                You can create more advanced searching functionality and allow a user to specify
+                                in which column to search for a given phrase.
+                            </p>
+                            <p class="note note-primary">
+                                Search fields need to be disabled manually in the edit mode.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <div class="d-flex">
+                                        <div class="form-outline">
+                                            <input type="text" id="search_advanced" class="form-control" />
+                                            <label class="form-label" for="search_advanced">Search</label>
+                                        </div>
+                                        <div class="px-3 mt-1">in:</div>
+                                        <div>
+                                            <select class="select" id="search_advanced_select">
+                                                <option value="">All columns</option>
+                                                <option value="company">Company</option>
+                                                <option value="office">Office</option>
+                                            </select>
+                                        </div>
+                                        <button
+                                                id="search_advanced_btn"
+                                                class="btn btn-outline-primary btn-sm mx-2"
+                                        >
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_advanced_search"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_advanced_search"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-between mb-4">
+                                            <div class="d-flex">
+                                                <div class="form-outline">
+                                                    <input type="text" id="search_advanced" class="form-control" />
+                                                    <label class="form-label" for="search_advanced">Search</label>
+                                                </div>
+                                                <div class="px-3 mt-1">in:</div>
+                                                <div>
+                                                    <select class="select" id="search_advanced_select">
+                                                        <option value="">All columns</option>
+                                                        <option value="company">Company</option>
+                                                        <option value="office">Office</option>
+                                                    </select>
+                                                </div>
+                                                <button id="search_advanced_btn" class="btn btn-outline-primary btn-sm mx-2">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                            <button
+                                                    class="btn btn-primary btn-sm ml-3"
+                                                    data-add-entry
+                                                    data-target="#table_advanced_search"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_advanced_search"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const input = document.getElementById('search_advanced');
+                                        const select = document.getElementById('search_advanced_select');
+                                        const searchBtn = document.getElementById('search_advanced_btn');
+                                        const table = document.getElementById('table_advanced_search');
+
+                                        const search = () => {
+                                        tableAdvancedSearch.search(input.value, select.value)
+                                        }
+
+                                        const tableAdvancedSearch = new TableEditor(
+                                        table,
+                                        {
+                                        columns: advancedColumns,
+                                        rows: advancedRows,
+                                        },
+                                        { entries: 5, entriesOptions: [5, 10, 15] }
+                                        );
+
+                                        searchBtn.addEventListener('click', search);
+
+                                        // disable search in edit mode
+
+                                        const toggleSelectState = (disabled) => {
+                                        const selectInstance = mdb.Select.getInstance(select);
+                                        selectInstance.dispose();
+
+                                        if (disabled) {
+                                        select.setAttribute('data-disabled', true);
+                                        } else {
+                                        select.removeAttribute('data-disabled');
+                                        }
+
+                                        new mdb.Select(select);
+                                        };
+
+                                        table.addEventListener('edit.mdb.tableEditor', () => {
+                                        input.setAttribute('disabled', true);
+                                        searchBtn.setAttribute('disabled', true);
+
+                                        toggleSelectState(true);
+                                        });
+
+                                        table.addEventListener('exit.mdb.tableEditor', () => {
+                                        input.removeAttribute('disabled');
+                                        searchBtn.removeAttribute('disabled');
+
+                                        toggleSelectState(false);
+                                        });
+                                        );
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Advanced search example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Async data example-->
+                        <section id="section-async-data">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Async data from API</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                While awaiting data from API, you can prevent a user from interacting with Table
+                                Editor by setting <code>loading</code> option to <code>true</code>.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-between mb-4">
+                                    <button id="async_data_btn" class="btn btn-primary btn-sm">
+                                        Load data
+                                    </button>
+                                    <div class="d-flex">
+                                        <div class="form-outline">
+                                            <input
+                                                    type="text"
+                                                    data-search
+                                                    data-target="#table_async_data"
+                                                    id="search_async"
+                                                    class="form-control"
+                                            />
+                                            <label class="form-label" for="search_async">Search</label>
+                                        </div>
+                                        <button
+                                                class="btn btn-primary btn-sm ml-3"
+                                                data-add-entry
+                                                data-target="#table_async_data"
+                                        >
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div id="table_async_data"></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-between mb-4">
+                                            <button id="async_data_btn" class="btn btn-primary btn-sm">
+                                                Load data
+                                            </button>
+                                            <div class="d-flex">
+                                                <div class="form-outline">
+                                                    <input
+                                                            type="text"
+                                                            data-search
+                                                            data-target="#table_async_data"
+                                                            id="search_async"
+                                                            class="form-control"
+                                                    />
+                                                    <label class="form-label" for="search_async">Search</label>
+                                                </div>
+                                                <button
+                                                        class="btn btn-primary btn-sm ml-3"
+                                                        data-add-entry
+                                                        data-target="#table_async_data"
+                                                >
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div id="table_async_data"></div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const table = document.getElementById('table_async_data');
+                                        const loadBtn = document.getElementById('async_data_btn');
+
+                                        const columns = [
+                                        { label: 'Company', field: 'company' },
+                                        { label: 'Email', field: 'email' },
+                                        { label: 'Name', field: 'name' },
+                                        { label: 'Phone', field: 'phone' },
+                                        ];
+
+                                        const asyncTable = new TableEditor(
+                                        table,
+                                        {
+                                        columns,
+                                        },
+                                        {
+                                        loading: true,
+                                        }
+                                        );
+
+                                        const loadData = () => {
+                                        asyncTable.update(null, { loading: true });
+
+                                        fetch('https://jsonplaceholder.typicode.com/users')
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                        asyncTable.update(
+                                        {
+                                        rows: data.map((user) => ({
+                                        ...user,
+                                        address: `${user.address.city}, ${user.address.street}`,
+                                        company: user.company.name,
+                                        })),
+                                        },
+                                        { loading: false }
+                                        );
+                                        });
+                                        };
+
+                                        loadBtn.addEventListener('click', loadData);
+
+                                        table.addEventListener('update.mdb.tableEditor', e => {
+                                            // here you can create a POST request to update your database
+                                            console.log(e.columns, e.rows);
+                                        })
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Async data example-->
+
+
+                        <hr class="my-5" />
+
+                        <!--Section: Notifications example-->
+                        <section id="section-notifications">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Notifications</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                In this example, handlers for custom events trigger notifications after
+                                adding/deleting/updating an entry.
+                            </p>
+
+                            <!--Section: Live Preview-->
+                            <section class="border p-4">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline">
+                                        <input
+                                                data-search
+                                                data-target="#table_notifications"
+                                                type="text"
+                                                id="search_table_notifications"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_table_notifications">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-primary btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_notifications"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div id="table_notifications"></div>
+                                <div
+                                        class="alert fade"
+                                        style="z-index: 10000;"
+                                        id="alert-add-entry"
+                                        role="alert"
+                                        data-position="top-right"
+                                        data-autohide="true"
+                                        data-width="360px"
+                                        data-color="success"
+                                ></div>
+                                <div
+                                        class="alert fade"
+                                        style="z-index: 10000;"
+                                        id="alert-update-entry"
+                                        role="alert"
+                                        data-position="top-right"
+                                        data-autohide="true"
+                                        data-width="360px"
+                                        data-color="primary"
+                                ></div>
+                                <div
+                                        class="alert fade"
+                                        style="z-index: 10000;"
+                                        id="alert-remove-entry"
+                                        role="alert"
+                                        data-position="top-right"
+                                        data-autohide="true"
+                                        data-width="360px"
+                                        data-color="danger"
+                                ></div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="d-flex justify-content-end mb-4">
+                                            <div class="form-outline">
+                                                <input
+                                                        data-search
+                                                        data-target="#table_notifications"
+                                                        type="text"
+                                                        id="search_table_notifications"
+                                                        class="form-control"
+                                                />
+                                                <label class="form-label" for="search_table_notifications">Search</label>
+                                            </div>
+                                            <button
+                                                    class="btn btn-primary btn-sm ml-3"
+                                                    data-add-entry
+                                                    data-target="#table_notifications"
+                                            >
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        <hr />
+                                        <div id="table_notifications"></div>
+                                        <div
+                                                class="alert fade"
+                                                id="alert-add-entry"
+                                                role="alert"
+                                                data-position="top-right"
+                                                data-autohide="true"
+                                                data-width="360px"
+                                                data-color="success"
+                                        >
+                                        </div>
+                                        <div
+                                                class="alert fade"
+                                                id="alert-update-entry"
+                                                role="alert"
+                                                data-position="top-right"
+                                                data-autohide="true"
+                                                data-width="360px"
+                                                data-color="primary"
+                                        ></div>
+                                        <div
+                                                class="alert fade"
+                                                id="alert-remove-entry"
+                                                role="alert"
+                                                data-position="top-right"
+                                                data-autohide="true"
+                                                data-width="360px"
+                                                data-color="danger"
+                                        >
+                                        </div>
+                                    </code>
+                                    <code data-lang="JS" data-name="JavaScript">
+                                        const advancedColumns = [
+                                        {
+                                        width: 250,
+                                        label: 'Company',
+                                        field: 'company',
+                                        },
+                                        {
+                                        width: 250,
+                                        sort: false,
+                                        defaultValue: 'Warsaw',
+                                        options: ['London', 'Warsaw', 'New York'],
+                                        inputType: 'select',
+                                        label: 'Office',
+                                        field: 'office',
+                                        },
+                                        {
+                                        width: 250,
+                                        inputType: 'number',
+                                        defaultValue: 1,
+                                        label: 'Employees',
+                                        field: 'employees',
+                                        },
+                                        {
+                                        width: 100,
+                                        defaultValue: false,
+                                        inputType: 'checkbox',
+                                        label: 'International',
+                                        field: 'international',
+                                        },
+                                        ];
+
+                                        const advancedRows = [
+                                        {
+                                        company: 'Smith & Johnson',
+                                        office: 'London',
+                                        employees: 30,
+                                        international: true,
+                                        },
+                                        {
+                                        company: 'P.J. Company',
+                                        office: 'London',
+                                        employees: 80,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'Food & Wine',
+                                        office: 'London',
+                                        employees: 12,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'IT Service',
+                                        office: 'London',
+                                        employees: 17,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'A. Jonson Gallery',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        {
+                                        company: 'F.A. Architects',
+                                        office: 'London',
+                                        employees: 4,
+                                        international: false,
+                                        },
+                                        ];
+
+                                        const table = document.getElementById('table_notifications');
+
+                                        new TableEditor(table, { rows: advancedRows, columns: advancedColumns });
+
+                                        table.addEventListener('add.mdb.tableEditor', (e) => {
+                                        const alert = document.getElementById('alert-add-entry');
+                                        const alertInstance = mdb.Alert.getInstance(alert);
+
+                                        const { company, office } = e.row;
+                                        alert.innerHTML = `<strong>New entry:</strong> ${company} (${office})`;
+
+                                        alertInstance.show();
+                                        });
+
+                                        table.addEventListener('delete.mdb.tableEditor', (e) => {
+                                        const alert = document.getElementById('alert-remove-entry');
+                                        const alertInstance = mdb.Alert.getInstance(alert);
+
+                                        const { company, office } = e.row;
+                                        alert.innerHTML = `<strong>Deleted entry:</strong> ${company} (${office})`;
+
+                                        alertInstance.show();
+                                        });
+
+                                        table.addEventListener('updateEntry.mdb.tableEditor', (e) => {
+                                        const alert = document.getElementById('alert-update-entry');
+                                        const alertInstance = mdb.Alert.getInstance(alert);
+
+                                        const { company, office } = e.row;
+                                        alert.innerHTML = `<strong>Updated entry:</strong> ${company} (${office})`;
+
+                                        alertInstance.show();
+                                        });
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Notifications example-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Dark-->
+                        <section id="section-dark">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Dark</h2>
+
+                            <!-- description -->
+                            <p class="mb-4">
+                                Dark mode can be applied to both modal and inline versions - firstly, add a CSS
+                                class which changes the background color to your page. Secondly, pass the same
+                                class name to the <code>color</code> option of your Table Editor (f.e.
+                                'bg-dark'). Now change the font to light by setting <code>dark</code> attribute
+                                to <code>true</code>.
+                            </p>
+                            <p class="note note-primary">
+                                <strong>Tip:</strong> add <code>form-white</code> class to your search input's
+                                wrapper.
+                            </p>
+                            <!--Section: Live Preview-->
+                            <section class="border p-4 bg-dark">
+                                <div class="d-flex justify-content-end mb-4">
+                                    <div class="form-outline form-white">
+                                        <input
+                                                data-search
+                                                data-target="#table_dark"
+                                                type="text"
+                                                id="search_table_dark"
+                                                class="form-control"
+                                        />
+                                        <label class="form-label" for="search_table_dark">Search</label>
+                                    </div>
+                                    <button
+                                            class="btn btn-outline-light btn-sm ml-3"
+                                            data-add-entry
+                                            data-target="#table_dark"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                                <hr />
+                                <div
+                                        class="table-editor"
+                                        id="table_dark"
+                                        data-color="bg-dark"
+                                        data-mode="modal"
+                                        data-dark="true"
+                                        data-entries="5"
+                                        data-entries-options="[5, 10, 15]"
+                                >
+                                    <table>
+                                        <thead>
+                                        <tr>
+                                            <th class="th-sm" data-width="250">Company</th>
+                                            <th class="th-sm" data-width="250">Address</th>
+                                            <th class="th-sm" data-width="250">
+                                                Employees
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>Smith & Johnson</td>
+                                            <td>Park Lane 2, London</td>
+                                            <td>30</td>
+                                        </tr>
+                                        <tr>
+                                            <td>P.J. Company</td>
+                                            <td>Oak Street 7, Aberdeen</td>
+                                            <td>80</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Food & Wine</td>
+                                            <td>Netherhall Gardens 3, Hampstead</td>
+                                            <td>12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>IT Service</td>
+                                            <td>Warwick Road 14, London</td>
+                                            <td>17</td>
+                                        </tr>
+                                        <tr>
+                                            <td>A. Jonson Gallery</td>
+                                            <td>Oaklands Avenue 2, London</td>
+                                            <td>4</td>
+                                        </tr>
+                                        <tr>
+                                            <td>F.A. Architects</td>
+                                            <td>Frognal Way 7, Hampstead</td>
+                                            <td>4</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </section>
+                            <!--Section: Live Preview-->
+
+                            <!--Section: Code-->
+                            <section>
+                                <!-- prettier-ignore -->
+                                <mdbsnippet>
+                                    <code data-lang="html" data-name="HTML">
+                                        <div class="bg-dark">
+                                            <div class="d-flex justify-content-end mb-4">
+                                                <div class="form-outline form-white">
+                                                    <input
+                                                            data-search
+                                                            data-target="#table_dark"
+                                                            type="text"
+                                                            id="search_table_dark"
+                                                            class="form-control"
+                                                    />
+                                                    <label class="form-label" for="search_table_dark">Search</label>
+                                                </div>
+                                                <button
+                                                        class="btn btn-outline-light btn-sm ml-3"
+                                                        data-add-entry
+                                                        data-target="#table_dark"
+                                                >
+                                                    <i class="fa fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <hr />
+                                            <div
+                                                    class="table-editor bg-dark"
+                                                    id="table_dark"
+                                                    data-mode="modal"
+                                                    data-dark="true"
+                                                    data-entries="5"
+                                                    data-entries-options="[5, 10, 15]"
+                                            >
+                                                <table class="table">
+                                                    <thead>
+                                                    <tr>
+                                                        <th class="th-sm" data-width="250">Company</th>
+                                                        <th class="th-sm" data-width="250">Address</th>
+                                                        <th class="th-sm" data-width="250">
+                                                            Employees
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr>
+                                                        <td>Smith & Johnson</td>
+                                                        <td>Park Lane 2, London</td>
+                                                        <td>30</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>P.J. Company</td>
+                                                        <td>Oak Street 7, Aberdeen</td>
+                                                        <td>80</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Food & Wine</td>
+                                                        <td>Netherhall Gardens 3, Hampstead</td>
+                                                        <td>12</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>IT Service</td>
+                                                        <td>Warwick Road 14, London</td>
+                                                        <td>17</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>A. Jonson Gallery</td>
+                                                        <td>Oaklands Avenue 2, London</td>
+                                                        <td>4</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>F.A. Architects</td>
+                                                        <td>Frognal Way 7, Hampstead</td>
+                                                        <td>4</td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </code>
+                                </mdbsnippet>
+                            </section>
+                            <!--Section: Code-->
+                        </section>
+                        <!--Section: Dark-->
+                    </section>
+                    <!--Section: Docs content-->
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-2 mb-4">
+                    <!-- Table of content -->
+                    <div id="scrollspy" class="sticky-top">
+                        <ul class="nav flex-column nav-pills menu-sidebar">
+                            <!-- Links -->
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#section-introduction">Introduction</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-basic-example">Basic example</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-modal">Modal</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-inputs">Inputs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-disable-edit">Disable edit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-confirm-delete">Confirm delete</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-advanced-search">Advanced search</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-async-data">Async data</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-custom-rows">Custom rows</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-notifications">Notifications</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#section-dark">Dark</a>
+                            </li>
+
+                            <!-- Links -->
+                        </ul>
+                    </div>
+                    <!-- Table of content -->
+                </div>
+                <!--Grid column-->
+            </div>
+            <!--Grid row-->
+        </div>
+        <!-- Overview panel -->
+
+        <!-- API panel -->
+        <div class="tab-pane fade" id="pills-api" role="tabpanel" aria-labelledby="pills-api-tab">
+            <!--Grid row-->
+            <div class="row">
+                <!--Grid column-->
+                <div class="col-md-10 mb-4">
+                    <!--Section: API content-->
+                    <section>
+                        <!--Section: Introduction-->
+                        <section id="section-introduction">
+                            <!-- Main title -->
+                            <h2 class="h1 font-weight-bold">Table Editor - API</h2>
+                        </section>
+                        <!--Section: Introduction-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Usage-->
+                        <section id="api-section-usage">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Usage</h2>
+
+                            <h4>Via data attributes</h4>
+
+                            <p>
+                                Using the Table Editor component doesn't require any additional JavaScript code
+                                - simply add a div wrapper with a class "table-editor" to your table and use
+                                data attributes to set all options.
+                            </p>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code data-lang="html" data-name="HTML">
+                                    <div class="d-flex justify-content-end mb-4">
+                                        <div class="form-outline">
+                                            <input
+                                                    data-search
+                                                    data-target="#table_1"
+                                                    type="text"
+                                                    id="search_table_1"
+                                                    class="form-control"
+                                            />
+                                            <label class="form-label" for="search_table_1">Search</label>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm ml-3" data-add-entry data-target="#table_1">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <hr />
+                                    <div
+                                            class="table-editor"
+                                            id="table_1"
+                                            data-mode="modal"
+                                            data-entries="5"
+                                            data-entries-options="[5, 10, 15]"
+                                    >
+                                        <table></table>
+                                    </div>
+                                </code>
+                            </mdbsnippet>
+
+                            <h4 class="mt-4">Via JavaScript</h4>
+
+                            <p>
+                                If you prefer to render a table with JavaScript, initialize an instance with the
+                                TableEditor constructor.
+                            </p>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code data-lang="js" data-name="JavaScript">
+                                    const table = document.getElementById('my-table');
+                                    const tableEditor = new TableEditor(table, { rows: [], columns: [], {
+                                    mode: 'modal',
+                                    entries: 5,
+                                    entriesOptions: [5, 10, 15]
+                                    }})
+                                </code>
+                            </mdbsnippet>
+
+                            <h4 class="mt-4">Via jQuery</h4>
+
+                            <p class="note note-warning">
+                                <strong>Note:</strong> By default, MDB <strong>does not</strong> include jQuery
+                                and you have to add it to the project on your own.
+                            </p>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code data-lang="js" data-name="jQuery">
+                                    $('#my-tableEditor').tableEditor({
+                                    columns: [
+                                    { label: 'Column 1', width: 100, fixed: true, sort: false },
+                                    { label: 'Column 2'}
+                                    ],
+                                    rows: [
+                                    ['Value 1', 'Value 2']
+                                    ]
+                                    }, {
+                                    bordered: true
+                                    })
+
+                                    // Calling .update() with the jQuery interface:
+
+                                    $('#my-tableEditor').tableEditor('update', { rows: [...], columns: [...]}, { bordered: true, loading: false })
+                                </code>
+                            </mdbsnippet>
+                        </section>
+                        <!--Section: Usage-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Options-->
+                        <section id="section-options">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Options</h2>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="th-sm">Name</th>
+                                        <th class="th-sm">Type</th>
+                                        <th class="th-sm">Default</th>
+                                        <th class="th-sm">Description</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">actionHeader</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Actions'</code></td>
+                                        <td>Header for action buttons</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">actionPosition</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'end'</code></td>
+                                        <td>Decides where to render an action column (start/end)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">bordered</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Adds borders to a datatable</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">borderless</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Removes all borders from a datatable</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">borderColor</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code></code></td>
+                                        <td>Changes a border color to one of main colors</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">cancelText</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Cancel'</code></td>
+                                        <td>Text displayed in cancel buttons</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">confirm</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Displays a Popconfirm element before removing an entry</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">confirmText</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Delete'</code></td>
+                                        <td>Text displayed in confirm buttons (Popconfirm)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">confirmMessage</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Are you sure you want to delete this entry?'</code></td>
+                                        <td>Text displayed in a Popconfirm element</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">color</code></td>
+                                        <td><i>String</i></td>
+                                        <td><code></code></td>
+                                        <td>Adds a color class to a datatable (f.e 'bg-dark')</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">dark</code></td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Changes a font color to white</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">defaultValue</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'-'</code></td>
+                                        <td>
+                                            This string will be used as a placeholder if a row doesn't have a
+                                            defined value for a column
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">entries</code>
+                                        </td>
+                                        <td><i>Number</i></td>
+                                        <td><code>10</code></td>
+                                        <td>Number of visible entries (pagination)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">entriesOptions</code>
+                                        </td>
+                                        <td><i>Array</i></td>
+                                        <td><code>[10, 25, 50, 200]</code></td>
+                                        <td>
+                                            Options available to choose from in a pagination select (rows per page)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">fixedHeader</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>
+                                            When it's set to true, the table's header will remain visible while
+                                            scrolling
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">fullPagination</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Displays additional buttons for the first and last pages</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">hover</code></td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Changes the background color of a hovered row</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">loading</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>
+                                            Sets the loading mode - disables interactions and displays a loader
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">loaderClass</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'bg-primary'</code></td>
+                                        <td>The class name for a loader (loading mode)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">loadingMessage</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Loading results...'</code></td>
+                                        <td>A message displayed while loading data</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">maxWidth</code>
+                                        </td>
+                                        <td><i>Number|String</i></td>
+                                        <td><code></code></td>
+                                        <td>
+                                            Sets a maximum width of a datatable - can be either a string ('10%') or
+                                            a number of pixels.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">maxHeight</code>
+                                        </td>
+                                        <td><i>Number|String</i></td>
+                                        <td><code></code></td>
+                                        <td>
+                                            Sets a maximum height of a datatable - can be either a string ('10%') or
+                                            a number of pixels.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">mode</code></td>
+                                        <td><i>String</i></td>
+                                        <td><code>'inline'</code></td>
+                                        <td>Changes edit mode - available options: 'inline', 'modal'</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">newItemHeader</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'New item'</code></td>
+                                        <td>A header of modal</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">noFoundMessage</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'No matching results found'</code></td>
+                                        <td>A message displayed when a table is empty</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">pagination</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>true</code></td>
+                                        <td>Shows/hides the pagination panel</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">saveText</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Save'</code></td>
+                                        <td>Text displayed in the save button (modal)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">sm</code></td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Decreases a row's paddings</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">striped</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>false</code></td>
+                                        <td>Slightly changes the background's color in every other row</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">rowsText</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'Rows per page':</code></td>
+                                        <td>A text indicating a number of rows per page</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                        <!--Section: Options-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Column Options-->
+                        <section id="section-column-options">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Options (column)</h2>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="th-sm">Name</th>
+                                        <th class="th-sm">Type</th>
+                                        <th class="th-sm">Default</th>
+                                        <th class="th-sm">Description</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">defaultValue</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code></code></td>
+                                        <td>Default value only for one column</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">editable</code>
+                                        </td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>true</code></td>
+                                        <td>Enables/disabled editing fields in this column</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">field</code></td>
+                                        <td><i>String</i></td>
+                                        <td><code>''</code></td>
+                                        <td>A field's name - will be used as a key for values in rows</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">fixed</code></td>
+                                        <td><i>Boolean|String</i></td>
+                                        <td><code>false</code></td>
+                                        <td>
+                                            When set to <code>true</code>, makes a column stick on the left while
+                                            scrolling. Changing its value to <code>right</code> will do the same on
+                                            the other side. For this option to work, you need to define
+                                            <code>width</code> as well.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">inputType</code>
+                                        </td>
+                                        <td><i>String</i></td>
+                                        <td><code>'text'</code></td>
+                                        <td>
+                                            Input type for a column. Available options: 'text', 'number',
+                                            'checkbox', 'select'
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">label</code></td>
+                                        <td><i>String</i></td>
+                                        <td><code>''</code></td>
+                                        <td>A displayed header of a column</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">options</code>
+                                        </td>
+                                        <td><i>Array</i></td>
+                                        <td><code></code></td>
+                                        <td>Array of options (for column with a "select" input type)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">sort</code></td>
+                                        <td><i>Boolean</i></td>
+                                        <td><code>true</code></td>
+                                        <td>Enables/disables sorting for this column</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">width</code></td>
+                                        <td><i>Number</i></td>
+                                        <td><code></code></td>
+                                        <td>A column's width in pixels</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                        <!--Section: Column Options-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Methods-->
+                        <section id="section-methods">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Methods</h2>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="th-sm">Name</th>
+                                        <th class="th-sm">Description</th>
+                                        <th class="th-sm">Example</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">add</code></td>
+                                        <td>Adds a new row (default values are optional)</td>
+                                        <td>
+                                            <code class="language-markup text-nowrap"
+                                            >instance.add(row: Object)</code
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">update</code></td>
+                                        <td>Updates and rerenders datatable</td>
+                                        <td>
+                                            <code class="language-markup text-nowrap"
+                                            >instance.update(data: Object, options: Object)</code
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap"><code class="highlighter-rouge">search</code></td>
+                                        <td>
+                                            Filters rows so there are only those containing the searched phrase
+                                        </td>
+                                        <td>
+                                            <code class="language-markup text-nowrap"
+                                            >instance.search(phrase: String, column: String|Array
+                                                (optional))</code
+                                            >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">dispose</code>
+                                        </td>
+                                        <td>Removes the component's instance</td>
+                                        <td>
+                                            <code class="language-markup text-nowrap">instance.dispose()</code>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code  data-lang="javascript" data-name="JavaScript">
+                                    const tableEditorInstance = TableEditor.getInstance(document.getElementById('my-tableEditor'));
+
+                                    tableEditorInstance.update({ rows: [...], columns: [...]}, { bordered: true, loading: false })
+                                </code>
+                            </mdbsnippet>
+                        </section>
+                        <!--Section: Methods-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Events-->
+                        <section id="section-events">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Events</h2>
+
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th class="th-sm">Name</th>
+                                        <th class="th-sm">Description</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">add.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires after adding a new row
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">delete.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires after deleting a row
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">edit.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires when user enters edit mode
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">exit.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires when user exits edit mode
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">update.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires in an editable mode when a user updates values. You can
+                                            access the upsdated data inside a listener's handler with
+                                            <code>event.rows</code> and <code>event.columns</code> fields.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">updateEntry.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            This event fires after saving changes in an existing row.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-nowrap">
+                                            <code class="highlighter-rouge">render.mdb.tableEditor</code>
+                                        </td>
+                                        <td>
+                                            Event emitted after the component renders/updates rows.
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code  data-lang="javascript" data-name="JavaScript">
+                                    const tableEditor = document.getElementById('my-tableEditor');
+
+                                    new TableEditor({ rows: [], columns: []}, { selectable: true, multi: true })
+
+                                    tableEditor.addEventListener('add.mdb.tableEditor', event => {
+                                    console.log(event.row)
+                                    })
+                                </code>
+                            </mdbsnippet>
+                        </section>
+                        <!--Section: Events-->
+
+                        <hr class="my-5" />
+
+                        <!--Section: Import-->
+                        <section id="api-section-import">
+                            <!-- Section title -->
+                            <h2 class="mb-4">Import</h2>
+
+                            <!-- Description -->
+                            <p>
+                                <strong>MDB UI KIT</strong> also works with module bundlers. Use the following
+                                code to import this component:
+                            </p>
+
+                            <!-- prettier-ignore -->
+                            <mdbsnippet>
+                                <code data-lang="js" data-name="JavaScript">
+                                    import { TableEditor } from 'mdb-table-editor';
+                                </code>
+                            </mdbsnippet>
+                        </section>
+                        <!--Section: Import-->
+                    </section>
+                    <!--Section: API content-->
+                </div>
+                <!--Grid column-->
+
+                <!--Grid column-->
+                <div class="col-md-2 mb-4">
+                    <!-- Table of content -->
+                    <div id="scrollspy" class="sticky-top">
+                        <ul class="nav flex-column nav-pills menu-sidebar">
+                            <!-- Links -->
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#api-section-usage">Usage</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#api-section-options">Options</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#api-section-column-options">Column options</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#api-section-methods">Methods</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#api-section-events">Events</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#api-section-import">Import</a>
+                            </li>
+                            <!-- Links -->
+                        </ul>
+                    </div>
+                    <!-- Table of content -->
+                </div>
+                <!--Grid column-->
+            </div>
+            <!-- Grid row -->
+        </div>
+        <!-- API panel -->
+    </div>
+    <!-- Panels -->
+</div>
+<!-- End your project here-->
+</body>
+<!-- PRISM -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/js/new-prism.js"></script>
+<!-- MDB SNIPPET -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/dev/js/mdbsnippet.min.js"></script>
+<!-- MDB -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/js/mdb.min.js"></script>
+<!-- Plugin js file -->
+<script type="text/javascript" src="https://mdbgo.io/m-dembna/mdb5-table-editor/js/tableEditor.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript">
+    const advancedColumns = [
+        {
+            width: 250,
+            label: 'Company',
+            field: 'company',
+        },
+        {
+            width: 250,
+            sort: false,
+            defaultValue: 'Warsaw',
+            options: ['London', 'Warsaw', 'New York'],
+            inputType: 'select',
+            label: 'Office',
+            field: 'office',
+        },
+        {
+            width: 250,
+            inputType: 'number',
+            defaultValue: 1,
+            label: 'Employees',
+            field: 'employees',
+        },
+        {
+            width: 100,
+            defaultValue: false,
+            inputType: 'checkbox',
+            label: 'International',
+            field: 'international',
+        },
+    ];
+
+    const advancedRows = [
+        {
+            company: 'Smith & Johnson',
+            office: 'London',
+            employees: 30,
+            international: true,
+        },
+        {
+            company: 'P.J. Company',
+            office: 'London',
+            employees: 80,
+            international: false,
+        },
+        {
+            company: 'Food & Wine',
+            office: 'London',
+            employees: 12,
+            international: false,
+        },
+        {
+            company: 'IT Service',
+            office: 'London',
+            employees: 17,
+            international: false,
+        },
+        {
+            company: 'A. Jonson Gallery',
+            office: 'London',
+            employees: 4,
+            international: false,
+        },
+        {
+            company: 'F.A. Architects',
+            office: 'London',
+            employees: 4,
+            international: false,
+        },
+    ];
+
+    const columns = [
+        {
+            width: 250,
+            label: 'Company',
+            field: 'company',
+        },
+        {
+            width: 250,
+            label: 'Address',
+            field: 'address',
+        },
+        {
+            width: 250,
+            label: 'City',
+            field: 'city',
+        },
+    ];
+
+    const rows = [
+        ['Smith & Johnson', 'Park Lane 2', 'London'],
+        ['P.J. Company', 'Oak Street 7', 'Aberdeen'],
+        ['Food & Wine', 'Netherhall Gardens 3', 'Hampstead'],
+        ['IT Service', 'Warwick Road 14', 'London'],
+        ['A. Jonson Gallery', 'Oaklands Avenue 2', 'London'],
+        ['F.A. Architects', 'Frognal Way 7', 'Hampstead'],
+    ];
+
+    (function () {
+        const tableDisableEdit = new TableEditor(
+            document.getElementById('table_inputs'),
+            { columns: advancedColumns, rows: advancedRows },
+            { entries: 5, entriesOptions: [5, 10, 15] }
+        );
+    })();
+
+    (function () {
+        const tableDisableEdit = new TableEditor(
+            document.getElementById('table_disable_edit'),
+            {
+                columns: advancedColumns.map((column) => {
+                    return {
+                        ...column,
+                        editable: false,
+                    };
+                }),
+                rows: advancedRows,
+            },
+            { entries: 5, entriesOptions: [5, 10, 15] }
+        );
+    })();
+
+    (function () {
+        const tableModal = new TableEditor(
+            document.getElementById('table_modal'),
+            {
+                columns: advancedColumns,
+                rows: advancedRows,
+            },
+            { mode: 'modal', entries: 5, entriesOptions: [5, 10, 15] }
+        );
+    })();
+
+    // Confirm delete
+
+    (function () {
+        const tableConfirmDelete = new TableEditor(
+            document.getElementById('table_confirm_delete'),
+            {
+                columns: advancedColumns,
+                rows: advancedRows,
+            },
+            { entries: 5, entriesOptions: [5, 10, 15], confirm: true }
+        );
+    })();
+
+    // advanced search
+
+    (function () {
+        const input = document.getElementById('search_advanced');
+        const select = document.getElementById('search_advanced_select');
+        const searchBtn = document.getElementById('search_advanced_btn');
+        const table = document.getElementById('table_advanced_search');
+
+        const search = () => {
+            tableAdvancedSearch.search(input.value, select.value);
+        };
+
+        const tableAdvancedSearch = new TableEditor(
+            table,
+            {
+                columns: advancedColumns,
+                rows: advancedRows,
+            },
+            { entries: 5, entriesOptions: [5, 10, 15] }
+        );
+
+        searchBtn.addEventListener('click', search);
+
+        const toggleSelectState = (disabled) => {
+            const selectInstance = mdb.Select.getInstance(select);
+            selectInstance.dispose();
+
+            if (disabled) {
+                select.setAttribute('data-disabled', true);
+            } else {
+                select.removeAttribute('data-disabled');
+            }
+
+            new mdb.Select(select);
+        };
+
+        table.addEventListener('edit.mdb.tableEditor', () => {
+            input.setAttribute('disabled', true);
+            searchBtn.setAttribute('disabled', true);
+
+            toggleSelectState(true);
+        });
+
+        table.addEventListener('exit.mdb.tableEditor', () => {
+            input.removeAttribute('disabled');
+            searchBtn.removeAttribute('disabled');
+
+            toggleSelectState(false);
+        });
+    })();
+
+    // async data
+
+    (function () {
+        const table = document.getElementById('table_async_data');
+        const loadBtn = document.getElementById('async_data_btn');
+
+        const columns = [
+            { label: 'Company', field: 'company' },
+            { label: 'Email', field: 'email' },
+            { label: 'Name', field: 'name' },
+            { label: 'Phone', field: 'phone' },
+        ];
+
+        const asyncTable = new TableEditor(
+            table,
+            {
+                columns,
+            },
+            {
+                loading: true,
+            }
+        );
+
+        const loadData = () => {
+            asyncTable.update(null, { loading: true });
+
+            fetch('https://jsonplaceholder.typicode.com/users')
+                .then((response) => response.json())
+                .then((data) => {
+                    setTimeout(() => {
+                        asyncTable.update(
+                            {
+                                rows: data.map((user) => ({
+                                    ...user,
+                                    address: `${user.address.city}, ${user.address.street}`,
+                                    company: user.company.name,
+                                })),
+                            },
+                            { loading: false }
+                        );
+                    }, 2000);
+                });
+        };
+
+        loadBtn.addEventListener('click', loadData);
+
+        table.addEventListener('update.mdb.tableEditor', (e) => {
+            // here you can create a POST request to update your database
+            console.log(e.columns, e.rows);
+        });
+    })();
+
+    // custom rows
+
+    (function () {
+        const table = document.getElementById('table_custom_rows');
+
+        const tableEditorInstance = new TableEditor(table, { rows, columns }, { pagination: false });
+
+        const buttons = document.getElementsByClassName('add-entry-button');
+
+        buttons.forEach((button) => {
+            button.addEventListener('click', (e) => {
+                const company = e.target.getAttribute('data-company');
+                const address = e.target.getAttribute('data-address');
+                const city = e.target.getAttribute('data-city');
+
+                tableEditorInstance.add({ company, address, city });
+
+                e.target.setAttribute('disabled', true);
+                e.target.innerText = 'Loaded';
+            });
+        });
+
+        // disable buttons in edit mode
+
+        table.addEventListener('edit.mdb.tableEditor', () => {
+            buttons.forEach((button) => {
+                button.setAttribute('disabled', true);
+            });
+        });
+
+        table.addEventListener('exit.mdb.tableEditor', () => {
+            buttons.forEach((button) => {
+                if (button.innerText.toLowerCase() !== 'loaded') {
+                    button.removeAttribute('disabled');
+                }
+            });
+        });
+    })();
+
+    // notifications
+
+    (function () {
+        const table = document.getElementById('table_notifications');
+        new TableEditor(table, { rows: advancedRows, columns: advancedColumns });
+
+        table.addEventListener('add.mdb.tableEditor', (e) => {
+            const alert = document.getElementById('alert-add-entry');
+            const alertInstance = mdb.Alert.getInstance(alert);
+
+            const { company, office } = e.row;
+            alert.innerHTML = `<strong>New entry:</strong> ${company} (${office})`;
+
+            alertInstance.show();
+        });
+
+        table.addEventListener('delete.mdb.tableEditor', (e) => {
+            const alert = document.getElementById('alert-remove-entry');
+            const alertInstance = mdb.Alert.getInstance(alert);
+
+            const { company, office } = e.row;
+            alert.innerHTML = `<strong>Deleted entry:</strong> ${company} (${office})`;
+
+            alertInstance.show();
+        });
+
+        table.addEventListener('updateEntry.mdb.tableEditor', (e) => {
+            const alert = document.getElementById('alert-update-entry');
+            const alertInstance = mdb.Alert.getInstance(alert);
+
+            const { company, office } = e.row;
+            alert.innerHTML = `<strong>Updated entry:</strong> ${company} (${office})`;
+
+            alertInstance.show();
+        });
+    })();
+</script>
+</html>
