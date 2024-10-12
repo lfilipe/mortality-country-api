@@ -17,4 +17,6 @@ public interface MortalityRepository extends JpaRepository<Mortality, MortalityI
             @Param("country") String country,
             @Param("year") Integer year
     );
+
+    void deleteByYear(Integer year);
 }

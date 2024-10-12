@@ -1,5 +1,6 @@
 package pt.org.msglifeiberia.mortality.services;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import pt.org.msglifeiberia.mortality.repository.MortalityRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class MortalityService {
@@ -23,8 +25,6 @@ public class MortalityService {
         if ((country == null || country.isBlank()) && (year == null || year == 0)) {
             return repository.findAll();
         }
-
-
         // Caso uma ou ambas as listas sejam fornecidas
         return repository.findByCountryAndYear(country, year);
     }
@@ -81,6 +81,35 @@ public class MortalityService {
         }
     }
 
+
+    public List<Mortality> saveAll(List<Mortality> mortalityList, Integer year) {
+        repository.deleteByYear(year);
+
+        return mortalityList.stream()
+                .map(mortality -> {
+
+                    Population populationMen = worldBankService.findByCountryGenderAndYear(mortality.getCountry(), "MA", mortality.getYear());
+
+                    Population populationWomen = worldBankService.findByCountryGenderAndYear(mortality.getCountry(), "FE", mortality.getYear());
+
+                    if (mortality.getMen() > (populationMen != null ? populationMen.getValue() : 0))
+                        throw new IllegalArgumentException("The value of male deaths cannot be greater than the total male population of that country and year.");
+
+                    if (mortality.getWomen() > (populationWomen != null ? populationWomen.getValue() : 0))
+                        throw new IllegalArgumentException("The value of female deaths cannot be greater than the total female population of that country and year.");
+
+                    Mortality newRecord = new Mortality(mortality.getCountry(), mortality.getYear(), mortality.getMen(), mortality.getWomen());
+
+                    newRecord.setMenPopulation(populationMen.getValue());
+                    newRecord.setWomenPopulation(populationWomen.getValue());
+
+                    return repository.save(newRecord);
+
+                }).collect(Collectors.toList());
+
+
+    }
+
     public void deleteMortalityRecord(String country, Integer year) {
         MortalityId id = new MortalityId(country, year);
 
@@ -88,8 +117,6 @@ public class MortalityService {
             throw new NoSuchElementException("Record not found for country code "+country+ " and year "+year);
         }
         repository.deleteById(id);
-
-
     }
 }
 

@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Date;
 import java.util.List;
 
-@Schema(description = "Exception 2 model", name = "Exception")
+@Schema(description = "Exception erro lis", name = "Exception")
 public class ExceptionErrorsResponse {
     private Date timestamp;
     private String httpCodeMessage;

@@ -7,18 +7,28 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.Column;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pt.org.msglifeiberia.mortality.exceptions.InvalidException;
 import pt.org.msglifeiberia.mortality.exceptions.NotFoundException;
 import pt.org.msglifeiberia.mortality.models.*;
 import pt.org.msglifeiberia.mortality.services.MortalityService;
 import pt.org.msglifeiberia.mortality.services.WorldBankService;
 
-import java.util.List;
-import java.util.NoSuchElementException;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 @RestController
 @RequestMapping("/mortality")
@@ -105,6 +115,132 @@ public class MortalityController {
                     HttpStatus.OK);
         } catch (NoSuchElementException k) {
             throw new NotFoundException("Country with code "+country+ " was not found");
+        }
+    }
+
+    @PostMapping("/upload")
+    @Transactional // vamos garantir atomicidade núnica transação
+    public ResponseEntity<ExceptionErrorsResponse> uploadCsvFile(MultipartFile file) {
+
+        List<String> errorMessages = new ArrayList<>();
+        List<Mortality> recordsToSave = new ArrayList<>();
+        int referenceYear = -1; // Valor de referência para o ano
+
+
+        if (file.isEmpty()) {
+            errorMessages.add("The uploaded file is empty.");
+            ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
+
+            return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+        try (BufferedReader fileReader = new BufferedReader(new InputStreamReader(file.getInputStream(), StandardCharsets.UTF_8));
+             CSVParser csvParser = new CSVParser(fileReader, CSVFormat.DEFAULT.withFirstRecordAsHeader())) {
+
+            if (!csvParser.iterator().hasNext()) {
+                errorMessages.add("The uploaded file does not contain any data.");
+                ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
+                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
+
+                return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            int lineNumber = 1; // Contar a linha para reportar erros
+            for (CSVRecord record : csvParser) {
+                lineNumber++;
+                try {
+                    // Validar cada linha
+                    String country = record.get("country");
+                    String yearStr = record.get("year").trim();
+                    String menStr = record.get("men").trim();
+                    String womenStr = record.get("women").trim();
+
+                    // Validações
+                    if (record.size() < 4) {
+                        throw new IllegalArgumentException("Missing data fields.");
+                    }
+
+                    if (country.length() != 2 || !country.matches("[A-Z]+")) {
+                        throw new IllegalArgumentException("Invalid country format");
+                    }
+
+                    Integer year;
+                    try {
+                        year = Integer.parseInt(yearStr);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid year format");
+                    }
+
+                    if (year < 1960 || year > 2023) {
+                        throw new IllegalArgumentException("Year must be between 1960 and 2023");
+                    }
+
+                    if (referenceYear == -1) {
+                        referenceYear = year;// Armazenar o ano da primeira linha
+                    } else {
+                        if (year != referenceYear) { // Verificar se o ano das linhas subsequentes é o mesmo
+                            throw new IllegalArgumentException("Year "+referenceYear+" must be unique across all rows.");
+                        }
+                    }
+
+
+                    Integer men;
+                    try {
+                        men = Integer.parseInt(menStr);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid men population format");
+                    }
+
+                    if (men < 0) {
+                        throw new IllegalArgumentException("Men population cannot be negative.");
+                    }
+
+                    Integer women;
+                    try {
+                        women = Integer.parseInt(womenStr);
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("Invalid women population format");
+                    }
+
+                    if (women < 0) {
+                        throw new IllegalArgumentException("Women population cannot be negative.");
+                    }
+
+
+                    Mortality mortalityRecord = new Mortality(country, year, men, women);
+                    // Se os dados forem válidos, adicionar à lista para salvar no fim
+                    recordsToSave.add(mortalityRecord);
+
+                } catch (IllegalArgumentException e) {
+                    // Capturar e armazenar erros de validação com a linha correspondente
+                    errorMessages.add("Error at line " + lineNumber + ": " + e.getMessage());
+                }
+            }
+
+            // Se houver erros, não salvar nenhum registro
+            if (!errorMessages.isEmpty()) {
+
+                ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
+                        HttpStatus.BAD_REQUEST.getReasonPhrase(), errorMessages);
+
+                return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.BAD_REQUEST);
+            }
+
+            // Se não exist erros, salvar  td
+            List<Mortality> records = mortalityService.saveAll(recordsToSave, referenceYear);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+
+        } catch (Exception e) {
+
+            errorMessages.add("An unexpected error occurred: " + e.getMessage());
+
+            ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
+                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
+
+            return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

@@ -82,12 +82,18 @@
             <select id="inputYear" name="inputYear" class="form-control">
             </select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <button type="button" id="searchCountryYear" class="btn btn-secondary mb-3">Search</button>
         </div>
-        <div class="col-2">
-        </div>
         <div class="col-3">
+        <form>
+            <label for="fileInput" class="form-label">Upload year .csv file</label>
+            <input class="form-control form-control-sm" id="fileInput" type="file" accept=".csv">
+            <button type="button" id="uploadCsvFile"  class="btn btn-light mb-3">Upload</button>
+        </form>
+
+        </div>
+        <div class="col-2">
             <button id="addRowBtn" class="btn btn-primary mb-3">Add New Row</button>
         </div>
     </form>
@@ -197,7 +203,6 @@
                 })
                 .catch(error => console.error('Error fetching mortality data:', error));
         }
-
         document.getElementById('searchCountryYear').addEventListener('click', () => {
 
             const country = document.getElementById('inputCountry').value;
@@ -212,6 +217,31 @@
                 el.style.display = 'none';
             });
         });
+
+        document.getElementById('uploadCsvFile').addEventListener('click', () => {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file.");
+                return;
+            }
+            const formData = new FormData();
+            formData.append('file', file);
+
+            fetch(window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality/upload', {
+                method: 'POST',
+                body: formData,
+            }).then(response => response.text())
+              .then(result => {
+                  alert(result);
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  alert('Error uploading file.');
+              });
+        });
+
 
         // Add New Row button event
         addRowBtn.addEventListener('click', () => {
@@ -528,6 +558,7 @@
             return proxied.apply(this, arguments);
         };
     })(customAlert);
+
 
 
 
