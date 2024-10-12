@@ -161,7 +161,7 @@
                 defaultYearOption.textContent = 'Select a year'; // Mensagem padrão
                 yearSelect.appendChild(defaultYearOption);
 
-                for (let year = 1960; year <= 2023; year++) {
+                for (let year = 2023; year >= 1960; year--) {
                     const option = document.createElement('option');
                     option.value = year;
                     option.textContent = year;
@@ -226,6 +226,9 @@
                 alert("Please select a file.");
                 return;
             }
+            document.querySelectorAll('.loading-state').forEach(function(el) {
+                el.style.display = 'flex';
+            });
             const formData = new FormData();
             formData.append('file', file);
 
@@ -234,12 +237,16 @@
                 body: formData,
             }).then(response => response.text())
               .then(result => {
-                  alert(result);
+                  alert("Ficheiro carregado com sucesso. Pode atualizar a página para ver os registos.");
+                  document.querySelectorAll('.loading-state').forEach(function(el) {
+                      el.style.display = 'none';
+                  });
               })
               .catch(error => {
                   console.error('Error:', error);
                   alert('Error uploading file.');
               });
+
         });
 
 
