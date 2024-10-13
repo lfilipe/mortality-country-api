@@ -29,10 +29,10 @@ http://localhost:8082/swagger-ui/index.html
    ```
 
 
-[Postman Collection Download](https://github.com/lfilipe/mortality-country-api/src/main/resources/MortalityAPI.postman_collection.json)
+[Postman Collection Download](https://github.com/lfilipe/mortality-country-api/blob/main/src/main/resources/MortalityAPI.postman_collection.json)
 
 
-[Example .csv file to upload](https://github.com/lfilipe/mortality-country-api/src/main/resources/teste.csv)
+[Example .csv file to upload](https://github.com/lfilipe/mortality-country-api/blob/main/src/main/resources/teste.csv)
 
 
 
