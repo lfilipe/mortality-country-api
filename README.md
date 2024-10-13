@@ -13,7 +13,7 @@ http://localhost:8082/swagger-ui/index.html
 
 1. Clone the repo
    ```sh
-   $ git clone https://github.com/lfilipe/mortality-country-api
+   $ git clone https://github.com/lfilipe/mortality-country-api.git
    ```
 2. Access dir
    ```sh
