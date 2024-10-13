@@ -88,20 +88,8 @@ public class MortalityService {
         return mortalityList.stream()
                 .map(mortality -> {
 
-                    Population populationMen = worldBankService.findByCountryGenderAndYear(mortality.getCountry(), "MA", mortality.getYear());
-
-                    Population populationWomen = worldBankService.findByCountryGenderAndYear(mortality.getCountry(), "FE", mortality.getYear());
-
-                    if (mortality.getMen() > (populationMen != null ? populationMen.getValue() : 0))
-                        throw new IllegalArgumentException("The value of male deaths cannot be greater than the total male population of that country and year.");
-
-                    if (mortality.getWomen() > (populationWomen != null ? populationWomen.getValue() : 0))
-                        throw new IllegalArgumentException("The value of female deaths cannot be greater than the total female population of that country and year.");
-
-                    Mortality newRecord = new Mortality(mortality.getCountry(), mortality.getYear(), mortality.getMen(), mortality.getWomen());
-
-                    newRecord.setMenPopulation(populationMen.getValue());
-                    newRecord.setWomenPopulation(populationWomen.getValue());
+                    Mortality newRecord = new Mortality(mortality.getCountry(), mortality.getYear(), mortality.getMen(), mortality.getWomen(),
+                            mortality.getMenPopulation(), mortality.getWomenPopulation());
 
                     return repository.save(newRecord);
 

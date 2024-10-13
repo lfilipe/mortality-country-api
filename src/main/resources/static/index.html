@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mortality Table Records</title>
+    <title>Country and Year-Based Mortality Records</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .hidden {
@@ -53,7 +53,7 @@
     <div class="loading"></div>
 </div>
 <div class="container mt-5">
-    <h2>Records mortality by Country and Year</h2>
+    <h2>Country and Year-Based Mortality Records</h2>
 
     <div class="modal" tabindex="-1" data-bs-backdrop="static" id="alertWindow">
         <div class="modal-dialog">
@@ -235,17 +235,28 @@
             fetch(window.location.protocol + "//" + window.location.host + window.location.pathname + 'mortality/upload', {
                 method: 'POST',
                 body: formData,
-            }).then(response => response.text())
-              .then(result => {
-                  alert("Ficheiro carregado com sucesso. Pode atualizar a página para ver os registos.");
-                  document.querySelectorAll('.loading-state').forEach(function(el) {
-                      el.style.display = 'none';
-                  });
-              })
-              .catch(error => {
-                  console.error('Error:', error);
-                  alert('Error uploading file.');
-              });
+            }).then(response => {
+                if (response.ok) {
+                    alert("File uploaded successfully. You can refresh the page to see the records.");
+                } else {
+                    return response.json().then(data => {
+                        const errorList = data.errors;
+                        let textContent = '<ul>';
+                        errorList.forEach(error => {
+                            textContent += '<li>' + error + '</li>';
+                        });
+                        textContent += '</ul>';
+                        alert(textContent);
+                    });
+                }
+            }).catch(error => {
+                    console.error('Error uploading file:', error);
+                    alert('Error uploading file');
+            }).finally(() => {
+                document.querySelectorAll('.loading-state').forEach(function(el) {
+                    el.style.display = 'none';
+                });
+            });
 
         });
 
@@ -253,7 +264,7 @@
         // Add New Row button event
         addRowBtn.addEventListener('click', () => {
             if (editingRow !== null) {
-                alert("Já existe uma linha sendo editada. Salve ou cancele antes de adicionar uma nova.");
+                alert("An existing row is being edited. Please save or cancel before adding a new one.");
                 return;
             }
             const newRow = document.createElement('tr');
@@ -350,11 +361,13 @@
                         return response.json().then(data => {
                             const errorList = data.errors; // This is the array of errors
 
-                            let textContent = '';
+                            let textContent = '<ul>';
 
                             errorList.forEach(error => {
                                 textContent += '<li>'+error+'</li>';
                             });
+                            textContent += '</ul>';
+
                             alert(textContent);
                         }).catch(() => {
                             console.error('Invalid JSON response for 400 error');

@@ -7,13 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import pt.org.msglifeiberia.mortality.exceptions.ContentFileInvalidException;
 import pt.org.msglifeiberia.mortality.exceptions.InvalidException;
 import pt.org.msglifeiberia.mortality.exceptions.NotFoundException;
 import pt.org.msglifeiberia.mortality.models.*;
@@ -25,7 +25,6 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -98,8 +97,8 @@ public class MortalityController {
 
 
     @Operation(
-            summary = "Indicators country",
-            description = "Search country by code [cca2] by ISO 3166-1 alpha2 country code")
+            summary = "Indicators country, gender and year",
+            description = "Search country by code [cca2] by ISO 3166-1 alpha2 country code, Gender FE for woman and MA for man, year between 1960 and 2023")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", content = { @Content(schema = @Schema(implementation = Population.class), mediaType = "application/json") }),
             @ApiResponse(responseCode = "404", description = "Country with code cca2 was not found.", content = { @Content(schema = @Schema(implementation = ExceptionResponse.class), mediaType = "application/json") })
@@ -119,8 +118,8 @@ public class MortalityController {
     }
 
     @PostMapping("/upload")
-    @Transactional // vamos garantir atomicidade núnica transação
-    public ResponseEntity<ExceptionErrorsResponse> uploadCsvFile(MultipartFile file) {
+    @Transactional // vamos garantir atomicidade núnica transação ExceptionErrorsResponse
+    public ResponseEntity<List<Mortality>> uploadCsvFile(MultipartFile file) {
 
         List<String> errorMessages = new ArrayList<>();
         List<Mortality> recordsToSave = new ArrayList<>();
@@ -129,10 +128,8 @@ public class MortalityController {
 
         if (file.isEmpty()) {
             errorMessages.add("The uploaded file is empty.");
-            ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
 
-            return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ContentFileInvalidException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessages);
         }
 
 
@@ -141,23 +138,19 @@ public class MortalityController {
 
             if (!csvParser.iterator().hasNext()) {
                 errorMessages.add("The uploaded file does not contain any data.");
-                ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
-                        HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
 
-                return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new ContentFileInvalidException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessages);
             }
 
-            int lineNumber = 1; // Contar a linha para reportar erros
+            int lineNumber = 1;
             for (CSVRecord record : csvParser) {
                 lineNumber++;
                 try {
-                    // Validar cada linha
                     String country = record.get("country");
                     String yearStr = record.get("year").trim();
                     String menStr = record.get("men").trim();
                     String womenStr = record.get("women").trim();
 
-                    // Validações
                     if (record.size() < 4) {
                         throw new IllegalArgumentException("Missing data fields.");
                     }
@@ -178,9 +171,9 @@ public class MortalityController {
                     }
 
                     if (referenceYear == -1) {
-                        referenceYear = year;// Armazenar o ano da primeira linha
+                        referenceYear = year;
                     } else {
-                        if (year != referenceYear) { // Verificar se o ano das linhas subsequentes é o mesmo
+                        if (year != referenceYear) { // Verificar se o ano das linhas seguintes é o mesmo
                             throw new IllegalArgumentException("Year "+referenceYear+" must be unique across all rows.");
                         }
                     }
@@ -208,39 +201,40 @@ public class MortalityController {
                         throw new IllegalArgumentException("Women population cannot be negative.");
                     }
 
+                    Population populationMen = worldBankService.findByCountryGenderAndYear(country, "MA", year);
 
-                    Mortality mortalityRecord = new Mortality(country, year, men, women);
+                    Population populationWomen = worldBankService.findByCountryGenderAndYear(country, "FE", year);
+
+                    if (men > (populationMen != null ? populationMen.getValue() : 0))
+                        throw new IllegalArgumentException("The value of male deaths cannot be greater than the total male population of that country and year.");
+
+                    if (women > (populationWomen != null ? populationWomen.getValue() : 0))
+                        throw new IllegalArgumentException("The value of female deaths cannot be greater than the total female population of that country and year.");
+
+
+                    Mortality mortalityRecord = new Mortality(country, year, men, women, populationMen.getValue(), populationWomen.getValue());
+
                     // Se os dados forem válidos, adicionar à lista para salvar no fim
                     recordsToSave.add(mortalityRecord);
 
                 } catch (IllegalArgumentException e) {
-                    // Capturar e armazenar erros de validação com a linha correspondente
+                    // Capturar e save do erro de validação com a linha correspondente
                     errorMessages.add("Error at line " + lineNumber + ": " + e.getMessage());
                 }
             }
 
-            // Se houver erros, não salvar nenhum registro
+            // Se exist erros, não salvar nada e lançar exceção
             if (!errorMessages.isEmpty()) {
-
-                ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
-                        HttpStatus.BAD_REQUEST.getReasonPhrase(), errorMessages);
-
-                return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.BAD_REQUEST);
+                throw new ContentFileInvalidException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessages);
             }
 
-            // Se não exist erros, salvar  td
+            // Se não existir erros, tudo ok
             List<Mortality> records = mortalityService.saveAll(recordsToSave, referenceYear);
 
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(records, HttpStatus.CREATED);
 
         } catch (Exception e) {
-
-            errorMessages.add("An unexpected error occurred: " + e.getMessage());
-
-            ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
-                    HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), errorMessages);
-
-            return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ContentFileInvalidException(HttpStatus.INTERNAL_SERVER_ERROR, errorMessages);
         }
     }
 

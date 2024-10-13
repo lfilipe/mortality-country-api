@@ -1,6 +1,5 @@
 package pt.org.msglifeiberia.mortality.controllers;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.reactive.result.method.annotation.ResponseEntityExceptionHandler;
 
+import pt.org.msglifeiberia.mortality.exceptions.ContentFileInvalidException;
 import pt.org.msglifeiberia.mortality.exceptions.InvalidException;
 import pt.org.msglifeiberia.mortality.exceptions.NotFoundException;
 import pt.org.msglifeiberia.mortality.models.ExceptionErrorsResponse;
@@ -38,13 +38,15 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                 request.getDescription(false),
                 HttpStatus.PRECONDITION_FAILED.getReasonPhrase());
 
+
+
         return new ResponseEntity<ExceptionResponse>(exceptionResponse, HttpStatus.PRECONDITION_FAILED);
     }
 
 
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ExceptionErrorsResponse> handleNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ExceptionErrorsResponse> handleNotValidException(MethodArgumentNotValidException ex) {
 
         List<String> errors = new ArrayList<>();
 
@@ -54,6 +56,18 @@ public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.BAD_REQUEST.getReasonPhrase(), errors);
         return new ResponseEntity<>(exceptionErrorsResponse, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ContentFileInvalidException.class)
+    public final ResponseEntity<ExceptionErrorsResponse> handleContentFileInvalidException(ContentFileInvalidException ex) {
+
+        ExceptionErrorsResponse exceptionErrorsResponse = new ExceptionErrorsResponse(new Date(),
+                ex.getHttpStatus().getReasonPhrase(), ex.getErrorMessages());
+
+        return new ResponseEntity<>(exceptionErrorsResponse, ex.getHttpStatus());
+    }
+
+
+
 
     /*
 

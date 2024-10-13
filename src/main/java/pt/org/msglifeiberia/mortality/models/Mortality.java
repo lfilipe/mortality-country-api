@@ -60,6 +60,15 @@ public class Mortality {
         this.women = women;
     }
 
+    public Mortality(String country, Integer year, Integer men, Integer women, Long menPopulation, Long womenPopulation) {
+        this.country = country;
+        this.year = year;
+        this.men = men;
+        this.women = women;
+        this.menPopulation = menPopulation;
+        this.womenPopulation = womenPopulation;
+    }
+
     public String getCountry() {
         return country;
     }
